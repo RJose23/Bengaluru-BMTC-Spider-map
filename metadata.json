@@ -1,0 +1,5 @@
+{
+  "name": "Bangalore BMTC Spider Map",
+  "description": "A geospatial visualization tool showing the nearest bus stops from any point on the map using dynamic spider-lines. Features Euclidean and estimated walking metrics.",
+  "requestFramePermissions": []
+}

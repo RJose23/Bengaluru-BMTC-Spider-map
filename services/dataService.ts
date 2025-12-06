@@ -1,0 +1,2099 @@
+import { BusStop } from '../types';
+
+const RAW_CSV_DATA = `stop_name,stop_id,stop_lat,stop_lon
+(Theneyuru)I Basapura Gate,26089,13.22602,77.83624
+10th Cross Lingadhiranahalli,29374,13.00951,77.47431
+10th Cross Magadi Road,20558,12.97556,77.55562
+10th Cross Magadi Road,20559,12.97574,77.55706
+10th Stone NICE Road,29375,12.87273,77.4986
+10th Stone NICE Road,35415,12.87242,77.49865
+11th Block Anjanapura,29373,12.85225,77.57235
+11th Block Anjanapura,35416,12.85224,77.57265
+12th Block Nagarabhavi,21629,12.96018,77.51398
+12th Block Nagarabhavi,21630,12.96076,77.51351
+12th Main 7th Cross BTM Layout,22869,12.91385,77.61022
+13th Main 7th Cross BTM Layout,22873,12.91405,77.61007
+14th Main HSR Layout,20568,12.91637,77.63472
+14th Main HSR Layout,20569,12.91619,77.63521
+14th Main HSR Layout,29381,12.91743,77.63835
+14th Main HSR Layout,35422,12.91746,77.63812
+16th Main Hopcoms BTM Layout,22881,12.91971,77.61036
+17th Cross 9th Main HSR Layout,35605,12.91263,77.63242
+17th Main Hopcoms BTM Layout,22884,12.91953,77.61028
+18th Main Jayanagara,22890,12.92328,77.58898
+18th Main Jayanagara,23428,12.92343,77.58964
+19th Main 13th Cross HSR Layout,22891,12.91593,77.65176
+19th Main 13th Cross HSR Layout,24300,12.91582,77.65175
+1st Block Rajajinagara,20575,13.0047,77.54909
+1st Block Rajajinagara,20576,13.00515,77.54887
+1st Block Vidyaranyapura,21631,13.07021,77.5555
+1st Block Vidyaranyapura,21632,13.07023,77.55539
+1st Block Vishweshwaraiah Layout,29392,12.93747,77.47876
+1st Block Vishweshwaraiah Layout,35600,12.93752,77.4789
+1st Cross Magadi Road,20577,12.97569,77.563
+1st Cross Magadi Road,20578,12.97569,77.5628
+1st Main Kodichikkanahalli,29393,12.89854,77.61543
+1st Main Kodichikkanahalli,35599,12.89847,77.6155
+1st Stage 3rd Block Nagarabhavi,20579,12.9533,77.52158
+1st Stage 3rd Block Nagarabhavi (Nayandahalli),22896,12.95302,77.52026
+1st Stage 3rd Block Nagarabhavi (Summanahalli),22897,12.95286,77.52017
+22nd Cross HSR Layout,24297,12.90857,77.65163
+2nd Stage  H B R Layout (2nd Cross),29400,13.03172,77.61208
+2nd Stage 9th Block Nagarabhavi,35595,12.96864,77.51027
+2nd Stage H B R Layout (1st Main),29399,13.02881,77.61556
+2nd Stage H B R Layout (1st Main),35594,13.02881,77.61553
+2nd Stage HBR Layout (2nd Cross),35593,13.03165,77.61209
+2nd Stage Kanteeravanagara,22907,13.01505,77.53901
+2nd stage Kuvempunagara,29402,13.07313,77.54132
+2nd stage Kuvempunagara,35591,13.07306,77.54142
+3rd Block Jayanagara,21446,12.9318,77.58392
+3rd Block Jayanagara,21447,12.93349,77.58396
+3rd Block Vidyaranyapura,21633,13.07237,77.55647
+3rd Block Vidyaranyapura,21634,13.07223,77.55637
+3rd Main Road Annapoorneshwarinagara,22684,12.97816,77.50434
+3rd Main Road Annapoorneshwarinagara,22688,12.97811,77.50446
+3rd Stage Basaveshwaranagara,29404,12.98912,77.54249
+3rd Stage Basaveshwaranagara,35589,12.98898,77.54254
+4th Block HBR Layout,29406,13.03437,77.63268
+4th Block HBR Layout,35587,13.03435,77.63264
+4th Phase Yalahanka New Town Iyengar Bakery,29407,13.1042,77.56999
+4th Stone NICE Road,35586,13.009,77.47509
+4th T Block Jayanagara,22918,12.92307,77.59353
+4th T Block Jayanagara,24180,12.92308,77.59345
+5th Block HBR Layout,35585,13.03582,77.6315
+5th Block Jayanagara,22920,12.91722,77.58356
+5th Block Jayanagara,22921,12.91732,77.58368
+5th Block Vishweshwaraiah Layout,35584,12.95838,77.4816
+5th Cross Magadi Road,20584,12.97567,77.56081
+5th Cross Magadi Road,20585,12.97578,77.56071
+5th Cross Sriramapura,22923,12.99214,77.56647
+5th Main HSR Layout,35583,12.91549,77.63237
+5th Phase Yelahanka New Town,22925,13.10575,77.57251
+5th Stone NICE Road,29412,12.97117,77.47148
+6th Block Rajajinagara,20586,12.97944,77.55359
+6th Block Rajajinagara,20587,12.97953,77.55377
+7th Cross Srirampura,29414,12.99051,77.56787
+7th Cross Wilson Garden,22929,12.94699,77.59436
+7th Cross Wilson Garden,23661,12.94684,77.59465
+7th Main Srirampura,29415,12.99057,77.56655
+80 feet Road Kalyananagara,20588,13.02564,77.6406
+80 feet Road Kalyananagara,21450,13.02546,77.64042
+80ft Road Banasawadi,29419,13.01538,77.6429
+80ft Road Banasawadi,35575,13.01511,77.64267
+80ft Road HRBR Layout,29420,13.02095,77.64317
+80ft Road HRBR Layout,35574,13.02035,77.64328
+80ft Road Junction Kariyanapalya,29418,12.8921,77.51449
+80ft Road MS Ramaiah College,22937,13.02752,77.57571
+8th Main 3rd Cross  Junction,22108,13.02248,77.63714
+8th Main 3rd Cross  Junction,22109,13.02254,77.63723
+8th Main Kamalanagara,20591,12.99178,77.53856
+8th Main Kamalanagara,20592,12.99163,77.53839
+8th Mile Dasarahalli,20593,13.04622,77.50755
+8th Mile Dasarahalli,20594,13.04541,77.50795
+8th Mile Dasarahalli,35570,13.0451,77.50748
+8th Mile Dasarahalli,35571,13.04547,77.50553
+8th Mile Dasarahalli,35572,13.04544,77.50547
+8th Mile Dasarahalli,38567,13.04571,77.50753
+9th Block Jayanagara,37132,12.91964,77.5928
+9th Block Jayanagara (22nd Main),22949,12.91969,77.59144
+9th Block Jayanagara (40th Cross),22950,12.91969,77.59247
+9th Stone NICE Road,29424,12.88789,77.48532
+9th block Jayanagara,37131,12.91957,77.59284
+A G Export Garments Nelamangala,29453,13.12046,77.39237
+A G Export Garments Nelamangala,35538,13.12048,77.39242
+A P J Abdul Kalam Statue,21652,12.97972,77.65404
+A P J Abdul Kalam Statue,21653,12.97977,77.65418
+ADMC Quarters Office,38855,13.00438,77.64131
+AECS Dental College,29450,12.86534,77.59831
+AECS Dental College,35541,12.86541,77.59832
+AECS Layout Cross,20595,12.96495,77.71832
+AECS Layout Cross,20596,12.96511,77.71827
+AECS Layout Singasandra,29451,12.88306,77.64991
+AECS Layout Singasandra,35540,12.88286,77.65018
+AGS Layout,29461,12.95173,77.47919
+AGS Layout,35533,12.95163,77.47921
+AGS Layout Arehalli,29462,12.91252,77.53704
+AGS Layout Arehalli,35532,12.91244,77.53703
+AGS Layout Cross,23014,12.91347,77.54088
+AGS Layout Cross,24342,12.91353,77.54088
+AIR FORCE Quarters,29463,13.05899,77.52141
+AIR FORCE Quarters,35531,13.05895,77.52139
+AL Ameen Residential School,29474,13.06983,77.80832
+AL Ameen Residential School,35521,13.0696,77.80836
+AL-Agro Factory,37331,12.98777,77.88168
+AL-Agro Factory,37332,12.98697,77.88059
+AMC College,23060,12.82933,77.58759
+AMC College,24134,12.83007,77.5878
+APCO Factory,29549,12.76209,77.47036
+APCO Factory,35454,12.76195,77.47044
+APMC Yard,29550,13.10494,77.44396
+APMC Yard,35453,13.10488,77.44388
+APS College,23134,12.78276,77.49966
+APS College,23632,12.78266,77.49952
+ARMY Public School ASC Center,38947,12.96467,77.61808
+ASC Centre,23190,12.96224,77.61901
+ASC Centre,23930,12.96245,77.61906
+Aane Kempegowdana Doddy,29426,12.86158,77.33503
+Aane Kempegowdana Doddy,35856,12.86152,77.33503
+Abbaiah Circle Sarjapura,23396,12.85976,77.79411
+Abbaiah Circle Sarjapura,23418,12.85974,77.79402
+Abbaiah Layout,29427,12.97933,77.68082
+Abbaiah Layout,35565,12.97928,77.68081
+Abbanakuppe,29428,12.77419,77.4095
+Abbanakuppe,35564,12.77413,77.40941
+Abbanakuppe Colony,35563,12.77123,77.41632
+Abbanakuppe KEB,30920,12.78762,77.42868
+Abbigere,29430,13.07696,77.52587
+Abbigere,35562,13.07692,77.52589
+Abbigere Cross,29431,13.07068,77.52974
+Abbigere Cross,35561,13.07069,77.52976
+Abbigere Dinne,29432,13.07106,77.52803
+Abbigere Dinne,35560,13.07099,77.52801
+Abbigere Gate,29433,13.07248,77.52353
+Abbigere Gate,35559,13.07243,77.52355
+Acharya College,22965,13.00234,77.48822
+Acharya College,22966,13.00238,77.48823
+Acharya Institute of Technology,29434,13.08353,77.48411
+Acharya Institute of Technology,35558,13.08351,77.48416
+Achyuthanagara Gate,29435,13.08423,77.48656
+Achyuthanagara Gate,35557,13.08418,77.48655
+Adakamaranahalli (Magadi Road),29437,12.94713,77.31054
+Adakamaranahalli Cross (Magadi Road),29438,12.95436,77.30902
+Adakamaranahalli Cross (Magadi Road),35554,12.95438,77.30922
+Adakimaranahalli,21639,13.07065,77.4449
+Adakimaranahalli,22974,13.06989,77.44532
+Adakimaranahalli,29439,13.07028,77.44482
+Adakimaranahalli,35553,13.06486,77.4433
+Adarshanagara,29442,13.07619,77.42374
+Adarshanagara,35552,13.07621,77.42378
+Adde Vishwanathapura,29444,13.18672,77.55112
+Adde Vishwanathapura,35550,13.18669,77.5511
+Addiganahalli,29445,13.17297,77.56943
+Addiganahalli,35549,13.17295,77.56959
+Addiganahalli Extension,22981,13.1728,77.57126
+Addiganahalli Extension 1,31347,13.17288,77.57123
+Adigondanahalli,29446,12.81457,77.75116
+Adigondanahalli,35548,12.81456,77.75126
+Adishwara Bombay Dying,37049,13.02126,77.55609
+Ado Sonnahatti,29447,12.77796,77.71554
+Ado Sonnahatti,35547,12.77796,77.71546
+Adrsha Savana,38162,13.20854,77.60383
+Adugodi,29448,12.94387,77.6077
+Adugodi,35543,12.94381,77.6077
+Adugodi,35544,12.94397,77.60748
+Adugodi,35546,12.94384,77.60761
+Adugodi Police Station,22990,12.93897,77.60976
+Adugodi Police Station,23802,12.93985,77.6095
+Aduru,22992,13.05552,77.70576
+Aduru,22993,12.73303,77.65433
+Aduru,22994,12.73301,77.6544
+Aduru,22995,13.05542,77.70589
+Aduru,36662,12.73311,77.657
+Aerospace Bagalur,29452,13.17289,77.73066
+Aerospace Bagalur,35539,13.17277,77.73058
+Agalakote,29454,13.21292,77.73612
+Agalakote,35537,13.21287,77.73615
+Agara,23002,12.8429,77.4863
+Agara,23003,12.84479,77.48713
+Agara,23004,12.84477,77.48709
+Agara,31348,12.84288,77.48626
+Agara Cross,21640,12.84915,77.52219
+Agara Cross,21641,12.84899,77.52207
+Agara Junction,20597,12.92433,77.65073
+Agara Junction,20598,12.92452,77.65028
+Agara Junction,24000,12.92464,77.64937
+Agara Junction,38120,12.92417,77.65075
+Agara Junction,38462,12.9239,77.65172
+Agrahara Dasarahalli,20599,12.97853,77.54293
+Agrahara Dasarahalli,20600,12.97874,77.54121
+Agrahara Layout,29456,13.09837,77.62683
+Agrahara Layout,35535,13.09838,77.62671
+Agrahara Layout Cross,31848,13.10248,77.6277
+Ainahalli,36061,13.25847,77.38759
+Ainahalli,36062,13.25852,77.38764
+Air Lines Dhaba Gate,29464,13.22275,77.74088
+Air Lines Dhaba Gate,35530,13.22266,77.74096
+Airport Trumpet,29465,13.19908,77.65792
+Airport Trumpet,35529,13.19905,77.6582
+Ajjagondanahalli,29467,12.95709,77.7684
+Ajjagondanahalli,35527,12.95708,77.7684
+Ajjanahalli,29468,12.9167,77.3865
+Ajjanahalli,35526,12.91666,77.38648
+Ajmeer Apartment Neeladri Road,29469,12.84185,77.64673
+Ajmeer Apartment Neeladri Road,35525,12.84181,77.64675
+Akkayammana Betta,23022,13.16162,77.64223
+Akkayammana Betta Uttanahalli Cross,29470,13.16165,77.64227
+Akkithimmanahalli,23668,12.96216,77.59674
+Akkithimmanahalli 1,31349,12.96221,77.59649
+Akshayanagara,29472,13.02072,77.68339
+Akshayanagara,35523,13.02068,77.68354
+Akshayanagara New Town,29473,12.87657,77.61101
+Akshayanagara New Town,35522,12.87657,77.61166
+Aladamara Chikkanahalli Cross,29475,12.72809,77.64804
+Aladamara Chikkanahalli Cross,35520,12.72796,77.64801
+Aladamara Laggere,29476,13.01324,77.52099
+Aladamara Laggere,35519,13.0133,77.521
+Aladamara Papareddypalya,21451,12.97505,77.50941
+Aladamara Papareddypalya,21642,12.97495,77.50948
+Alahalli,25681,13.27755,77.52143
+Alahalli,32821,13.2775,77.52152
+Alambadi,29477,12.89273,77.88659
+Alambadi,35518,12.8927,77.88656
+Alanayakanahalli Gate,29478,13.18089,77.32413
+Alanayakanahalli Gate,35517,13.18069,77.32407
+Ali Bommasandra,23034,12.82026,77.73644
+Ali Bommasandra,23035,12.82033,77.73644
+Alisda,21452,13.03392,77.54098
+Alisda,21453,13.03404,77.54112
+Aliyuru,38395,13.263,77.76564
+Allalasandra,29480,13.08818,77.58868
+Allalasandra,35515,13.08819,77.58864
+Allalasandra Gate,29481,13.08664,77.59375
+Allalasandra Gate,35106,13.08737,77.59557
+Allalasandra Gate,35151,13.08541,77.59421
+Allalasandra Gate,35608,13.08686,77.59386
+Allammanapalya,29483,12.9356,77.3661
+Allammanapalya,35513,12.93554,77.36618
+Alpha College Chikka Gubbi,29484,13.07702,77.662
+Alpha College Chikka Gubbi,35512,13.077,77.66202
+Alphine Apartment,38905,13.06649,77.5765
+Aluru,29485,13.08495,77.46551
+Aluru,35511,13.0849,77.46561
+Aluru BDA 2nd Stage,29486,13.09146,77.44993
+Aluru BDA 2nd Stage,35510,13.09138,77.44998
+Aluru Cross,29487,13.0824,77.47479
+Aluru Cross,35509,13.08236,77.47477
+Alurupalya,29488,13.09717,77.47063
+Alurupalya,35508,13.09713,77.47054
+Amarajyothi Badavane,29489,13.05526,77.62929
+Amarajyothi Badavane,35507,13.05525,77.62932
+Amba Bhavani Nagara,29490,13.09721,77.54594
+Amba Bhavani Nagara,35506,13.09712,77.54599
+Ambalagere,36059,13.24322,77.38657
+Ambalagere,36060,13.24327,77.38658
+Ambalipura,38661,13.23694,77.82405
+Ambalipura,38662,13.23693,77.82407
+Ambedkar Institute of Technology,21454,12.96319,77.50502
+Ambedkar Institute of Technology,21643,12.96338,77.50515
+Ambedkar Medical College Shampura,35503,13.02327,77.6126
+Ambedkar Nagara,23058,12.89914,77.71286
+Ambedkar Nagara,23901,12.89929,77.71273
+Ambika School,29494,13.15775,77.33712
+Ambika School,35502,13.15775,77.33719
+Amma Ashrama Cross,20601,12.94936,77.48882
+Amma Ashrama Cross,20602,12.94958,77.48867
+Amogha Layout,29497,13.07509,77.71806
+Amogha Layout,35499,13.07507,77.71818
+Amritha Ayurvedic Hospital,29498,13.12485,77.54721
+Amritha Ayurvedic Hospital,35498,13.12471,77.54725
+Amruth Sweets,38136,12.90921,77.64153
+Amruth Sweets,38137,12.90926,77.64147
+Amrutha Engineering College,29499,12.89566,77.67471
+Amrutha Engineering College,35101,12.8968,77.6752
+Amrutha Engineering College,35368,12.89689,77.67517
+Amruthahalli,23067,13.06576,77.60081
+Amruthahalli,35173,13.06574,77.60076
+Amruthanagara,31850,12.83939,77.54993
+Amruthanagara,35497,12.83943,77.54995
+Amruthanagara Canara Bank,29502,13.05518,77.59969
+Amruthanagara Canara Bank,35496,13.05506,77.59974
+Amruthanagara Hebbala,38643,13.05598,77.59791
+Anagalipura,29503,13.06842,77.68234
+Anagalipura,35495,13.06838,77.68241
+Anagalipura Gate,29504,13.07306,77.67885
+Anagalipura Gate,35494,13.07303,77.67888
+Ananda Ashrama (BGT Rd),22744,12.9275,77.60062
+Ananda Ashrama (BGT Rd),22768,12.92644,77.60037
+Ananda Rao Circle,20603,12.98115,77.57466
+Ananda Rao Circle,29506,12.98074,77.57503
+Ananda Rao Circle,35375,12.98117,77.57694
+Anandanagara,29507,12.98386,77.24218
+Anandanagara,35492,12.9838,77.24209
+Anandapura,29511,13.02423,77.69285
+Anandapura,35489,13.0241,77.6927
+Ananthapura,29512,13.11475,77.56709
+Ananthapura,35488,13.11478,77.56708
+Ananthapura Gate,23081,13.1146,77.57901
+Ananthapura Gate,23082,13.11478,77.57907
+Anche Muskuru,29513,12.9043,77.86795
+Anche Muskuru,35487,12.90452,77.8678
+Anchepalya,20604,12.89261,77.45795
+Anchepalya,20605,12.8926,77.45753
+Anchepalya,21644,13.05529,77.47983
+Anchepalya,23084,13.05497,77.47936
+Anchipura,29515,12.77061,77.43203
+Anchipura,35485,12.77008,77.43196
+Anchipura Colony,29516,12.76763,77.43855
+Anchipura Colony,35484,12.76759,77.43854
+Anchipura Cross,29517,12.79009,77.44125
+Anchipura Cross,35483,12.79006,77.44125
+Andhrahalli,29518,13.00805,77.48484
+Andhrahalli,35482,13.00802,77.48484
+Andhrahalli Gate,29519,13.11542,77.74525
+Andhrahalli Gate,35481,13.11545,77.74529
+Andhrahalli Govt School,29520,13.00956,77.48295
+Andhrahalli Govt School,35480,13.00952,77.48294
+Ane Hosahalli Gate,29521,12.62071,77.51387
+Ane Hosahalli Gate,35479,12.62062,77.51383
+Anehalla,29522,12.97985,77.2414
+Anehalla,35478,12.97983,77.24132
+Anekal,23094,12.70939,77.69641
+Anekal Circle,23095,12.71677,77.70018
+Anekal Circle,23974,12.71674,77.70009
+Anekal Road Junction,30365,12.76837,77.77016
+Anekal Road Junction,33142,12.76853,77.77016
+Anepalya,23800,12.95289,77.60532
+Anepalya,23818,12.95303,77.60518
+Anjan Vidya Kendra School,29525,12.92427,77.82438
+Anjan Vidya Kendra School,35475,12.92411,77.82445
+Anjanamurthy,38756,13.04511,77.57437
+Anjananagara,21455,12.98617,77.48817
+Anjananagara,21456,12.98614,77.48847
+Anjanapura,23101,12.86196,77.56393
+Anjanapura,23649,12.86196,77.56381
+Anjanapura,23651,12.862,77.56385
+Anjanapura 10 Block,38032,12.85564,77.57054
+Anjanapura 10 Block,38033,12.85601,77.569
+Anjanapura 10th  Block,38034,12.85561,77.5706
+Anjanapura 10th Block,21294,12.85593,77.56907
+Anjanapura 1st Block,29526,12.86001,77.54817
+Anjanapura 1st Block,35474,12.85998,77.54813
+Anjanapura 2nd Block,29527,12.86573,77.55245
+Anjanapura 2nd Block,35473,12.86563,77.55253
+Anjanapura 2nd Block Cross (LBSN),29528,12.86054,77.55939
+Anjanapura 2nd Block Cross (LBSN),38778,12.86053,77.55945
+Anjanapura Cross,29529,12.86183,77.56091
+Anjanapura Cross,35471,12.86183,77.56083
+Anjaneya Temple Anekal,23106,12.7173,77.70046
+Anjaneya Temple Anekal,24184,12.71729,77.70025
+Anjaneya Temple Bidaraguppe,21645,12.80086,77.78283
+Anjaneya Temple Bidaraguppe,21646,12.80131,77.78276
+Anjaneya Temple Devanahalli,29530,13.2351,77.71302
+Anjaneya Temple Devanahalli,35470,13.23506,77.713
+Anjaneya Temple Madhure,20606,13.20992,77.44487
+Anjaneya Temple Madhure,29531,13.20998,77.44486
+Anjaneya Temple Nelamangala,21647,13.09737,77.39777
+Anjaneya Temple Nelamangala,29533,13.09723,77.39774
+Anjaneya Temple Thigalarapalya,29534,13.01371,77.48343
+Anjaneya Temple Thigalarapalya,35468,13.01372,77.48347
+Ankanahalli,29536,13.20433,77.79846
+Ankanahalli,35466,13.20433,77.79838
+Ankegowdana Doddy,29537,12.70677,77.51728
+Ankegowdana Doddy,35465,12.70677,77.51733
+Annahalli,35464,12.69958,77.38452
+Annapoorneshwari nagara Cross,35463,12.96998,77.49655
+Annapoorneshwarinagara,22686,12.98077,77.50687
+Annapoorneshwarinagara,22687,12.98002,77.50667
+Annapoorneshwarinagara Cross,29540,12.97002,77.49658
+Annapoorneshwarinagara Water Tank,29541,12.97203,77.49697
+Annapoorneshwarinagara Water Tank,35462,12.97196,77.49702
+Annasandrapalya,21648,12.96444,77.67236
+Annasandrapalya,21649,12.96444,77.67252
+Annasandrapalya Cross,23120,12.96039,77.66622
+Annasandrapalya Cross,23646,12.96044,77.66607
+Anneshwara Circle,29543,13.21535,77.71058
+Anubhavanagara,35459,12.96778,77.5238
+Anugondanahalli,29545,12.95726,77.81527
+Anugondanahalli,35458,12.95716,77.81546
+Anugondanahalli Cross,21650,12.95895,77.81599
+Anugondanahalli Cross,21651,12.95894,77.81583
+Anugraha Badavane (Bilekahalli),38116,12.90302,77.60892
+Anupahalli,24988,13.21543,77.85596
+Anupahalli,32486,13.21548,77.85612
+Aparel Park,29548,13.27257,77.55193
+Aparel Park,35455,13.27266,77.55205
+Apex Bank,20607,12.94177,77.55602
+Apex Bank,20608,12.94183,77.55567
+Apollo Hospital,23578,12.89662,77.6
+Apollo Hospital,23870,12.89635,77.59972
+Appasandra,29551,13.06315,77.89669
+Appasandra,35452,13.06317,77.89659
+Aradeshanahalli,29553,13.22247,77.56361
+Aradeshanahalli,35450,13.22244,77.56364
+Aradeshanahalli Gate,23137,13.21637,77.55258
+Aradeshanahalli Gate,23140,13.21648,77.55266
+Arahalli,29554,13.22301,77.9487
+Arakere Byrapura,29555,13.20062,77.5393
+Arakere Byrapura,35448,13.20064,77.53932
+Arakere Gate,23145,12.89053,77.59817
+Arakere Gate,23147,12.89057,77.59804
+Aralalusandra,29557,12.73314,77.45381
+Aralalusandra,35446,12.73311,77.45385
+Aralalusandra Cross,29558,12.74337,77.46289
+Aralalusandra Cross,35445,12.74341,77.46301
+Aralimara (PK Kalyana Mantapa ),23810,12.88003,77.62459
+Aralimara (PK Kalyana Mantapa ),23814,12.87985,77.62456
+Aralimara Hosahalli,29559,13.14043,77.64128
+Aralimara Hosahalli,35444,13.14039,77.64126
+Aralimara Industrial Area  Rajajinagara,21654,12.97859,77.54909
+Aralimara Industrial Area  Rajajinagara,21655,12.97855,77.54893
+Aralimara Sunkadakatte,20609,12.99209,77.50467
+Aralimara Ullalu,35443,12.95768,77.48731
+Aralimaradapalya,23155,12.9297,77.36468
+Aralimaradapalya Cross,29561,12.92663,77.35998
+Aralimaradapalya Cross,35442,12.92656,77.36
+Aralumallige,29562,13.27372,77.50935
+Aralumallige,35441,13.27367,77.50939
+Aralumallige Cross,29563,13.26702,77.51161
+Aralumallige Cross,31350,13.26693,77.51178
+Arasanahalli,23159,12.96478,77.88863
+Arasanahalli,23160,13.20152,77.79732
+Arasanahalli,23161,13.20148,77.79737
+Arathipalya,29565,13.03724,77.42601
+Arathipalya,35438,13.03724,77.42593
+Aravinda Limited,23166,12.81475,77.67016
+Aravinda Limited,23889,12.81485,77.67002
+Arch Lingadeeranahalli,29566,12.99962,77.48869
+Arch Lingadeeranahalli,35437,12.99961,77.48872
+Arch Railway Gollahalli,29567,13.1482,77.41192
+Arch Railway Gollahalli,35436,13.14818,77.41187
+Archakara Badavane,29568,12.91878,77.45255
+Archakara Badavane,35435,12.91876,77.45237
+Are Bannimangala,29569,13.15398,77.71757
+Are Bannimangala,35434,13.154,77.71759
+Arebic College,21656,13.02992,77.62084
+Arebic College,21657,13.03049,77.62121
+Arebommanahalli T Begur,23171,13.14266,77.28491
+Arebommanahalli T Beguru,23172,13.14263,77.28492
+Arehalli,21658,12.93828,77.83035
+Arehalli,21659,12.90849,77.53855
+Arehalli,21660,12.93738,77.82992
+Arehalli,21661,12.90857,77.53841
+Arehalli,23173,12.76327,77.76696
+Arehalli,23174,13.27074,77.5663
+Arehalli,23175,12.76352,77.76729
+Arehalli Cross,21662,12.94227,77.83669
+Arehalli Cross,21663,12.94222,77.83665
+Arenur,29570,12.80984,77.77503
+Arenur,35433,12.80975,77.7749
+Arishinakunte,21664,13.08026,77.42417
+Arishinakunte,29571,13.07966,77.42419
+Arishinakunte,35679,13.20062,77.77363
+Arishinakunte,35680,13.20066,77.77358
+Arivesandra,29572,13.18506,77.32518
+Arivesandra,35677,13.18504,77.32512
+Army Public School Kamaraja Road,36501,12.97871,77.60941
+Arogya Dhama,35675,13.07838,77.35297
+Art Of Living,35674,12.82261,77.5141
+Art Of Living (Kanakapura Road),29575,12.82279,77.51415
+Art Of Living Ravishankar Ashram,29576,12.82863,77.51255
+Art Of Living Ravishankar Ashram,35673,12.82883,77.51259
+Ashoka Pillar,21457,12.94249,77.58515
+Ashoka Pillar,21458,12.94322,77.58529
+Ashoka Pillar,23759,12.94367,77.58496
+Ashoka Polytechnic,38759,13.06557,77.53308
+Ashokanagara,29578,12.93703,77.5625
+Ashrama Ramohalli,29579,12.9063,77.42886
+Ashrama Ramohalli,35671,12.90617,77.42892
+Ashraya Badavane,23193,12.97871,77.47403
+Ashwath Nagara,21666,13.05289,77.63144
+Ashwath Nagara,21667,13.05274,77.63125
+Ashwath Nagara Cross,21668,13.05078,77.63054
+Ashwath Nagara Cross,21669,13.05075,77.63067
+Ashwathkatte Kodihalli,29580,13.0186,77.81054
+Ashwathkatte Kodihalli,35670,13.01858,77.81063
+Ashwathkatte Manorayanapalya,23196,13.02798,77.60453
+Ashwathkatte Manorayanapalya,23347,13.02795,77.60448
+Ashwathkatte Sultanpalya,23197,13.02459,77.60346
+Ashwathkatte Sultanpalya,23345,13.0246,77.60341
+Ashwathnagara,20610,13.02679,77.57984
+Ashwathnagara,23198,13.02691,77.57973
+Aspire bee School,36556,12.87915,77.72373
+Attibele,29585,12.77787,77.76968
+Attibele,31853,12.77799,77.76984
+Attibele Bus Stand,21670,12.77896,77.77086
+Attibele Bus Stand,21671,12.77958,77.77061
+Attibele Bus Stand,21672,12.77954,77.77046
+Attibele Bus Stand,21673,12.77865,77.77077
+Attibele Sulibele,29586,13.16987,77.79388
+Attibele Sulibele,35665,13.1698,77.79387
+Attivatta,29587,13.08812,77.85348
+Attivatta Gate,31854,13.09743,77.85521
+Attivatta Gate,35663,13.09724,77.85527
+Atturu,23211,13.10653,77.56578
+Atturu,23212,13.09855,77.85864
+Atturu,23213,13.09877,77.85841
+Atturu,23214,13.10649,77.56577
+Atturu Layout,21675,13.09778,77.56763
+Atturu Layout,21676,13.09793,77.56753
+Atturu Layout,38904,13.09789,77.56709
+Atturu Layout Vegetable Market,29590,13.10079,77.56685
+Atturu Layout Vegetable Market,35662,13.10082,77.56687
+Austin Town,21677,12.96156,77.61344
+Austin Town,23672,12.96153,77.61456
+Austin Town Neelasandra,29591,12.9616,77.61254
+Auto Gas/Royal School,28061,12.90133,77.58585
+Avadadenahalli Gate,23216,12.74649,77.7078
+Avadadenahalli Gate,23840,12.74668,77.70779
+Avalahalli,21679,12.87293,77.56665
+Avalahalli,21682,12.87276,77.56657
+Avalahalli,23217,13.13522,77.56915
+Avalahalli,23220,13.13538,77.56924
+Avalahalli,38974,12.87275,77.56653
+Avalahalli BDA Layout,21684,12.87222,77.56118
+Avalahalli BDA Layout,29592,12.87386,77.56153
+Avalahalli BDA Layout,35661,12.87383,77.56154
+Avalahalli BDA Park Girinagara,21685,12.94328,77.54311
+Avalahalli BDA Park Girinagara,21686,12.94332,77.54271
+Avalahalli Electronic City,29593,12.86966,77.71175
+Avalahalli Electronic City,35660,12.86957,77.71163
+Avalahalli Hosakote,21680,13.0355,77.73575
+Avalahalli Hosakote,23219,13.03605,77.7358
+Avalahalli Hosakote,23221,13.03591,77.73531
+Avalahalli New BDA Layout,29594,12.9434,77.53675
+Avalahalli New BDA Layout,35659,12.94341,77.53685
+Avalakuppe Cross,29596,13.02376,77.34841
+Avalakuppe Cross,35657,13.02384,77.34843
+Avaragere,29598,12.82007,77.38086
+Avaragere,35655,12.82003,77.38079
+Avaragere Cross,29599,12.80957,77.37782
+Avaragere Cross,35654,12.80962,77.37784
+Avarehalli,29600,12.89934,77.33698
+Avarehalli,35653,12.89926,77.33696
+Avasarala Factory Kanakapura Road,29601,12.78211,77.49263
+Avasarala Factory Kanakapura Road,35652,12.78204,77.49265
+Avathi,29602,13.29633,77.72548
+Avathi,35651,13.29627,77.7256
+Avathi,37671,13.29642,77.72582
+Avathi,37672,13.29638,77.72579
+Averahalli,29603,13.03508,77.41617
+Averahalli,35650,13.03503,77.41612
+Averahalli Cross,29606,13.04392,77.41493
+Averahalli Cross,31855,13.03343,77.42184
+Averahalli Cross,31856,13.04391,77.4149
+Averahalli Cross,35649,13.03337,77.42186
+Avinash Petrol Bunk,23235,12.99045,77.58862
+Ayurvedic Hospital Bodhanahosahalli,23236,12.96969,77.8004
+Ayurvedic Hospital Bodhanahosahalli,23569,12.96962,77.80022
+Ayyappa Nagara  Sadaramangala,23238,13.00426,77.70997
+Ayyappa Nagara Muneshwara Temple Sadaramangala,35070,13.00445,77.71243
+Ayyappa Nagara Muneshwara Temple Sadaramangala,35307,13.00451,77.7124
+Ayyappa Nagara Sadaramangala,24258,13.00431,77.71002
+Ayyappa School Kereguddadahalli,23240,13.07468,77.517
+Ayyappa Temple Jalahalli Cross,21688,13.04623,77.52243
+Ayyappa Temple Jalahalli Cross,21689,13.0461,77.52231
+Ayyappa Temple Yashawanthapura,21690,13.02167,77.56321
+Ayyappa Temple Yashawanthapura,21691,13.02159,77.56316
+Ayyappaswamy Temple Madivala,35646,12.92478,77.61791
+Aziz Palya,29612,13.02721,77.36688
+Aziz Palya,35645,13.02712,77.36696
+B Channasandra,23246,13.01,77.6576
+B Channasandra,23247,13.01006,77.6575
+B Channasandra,23248,13.0102,77.6576
+B Channasandra Bridge(Ramamurthy Nagara Ring Road),20614,13.01128,77.66242
+B Channasandra Bridge(Ramamurthy Nagara Ring Road),21459,13.01354,77.66209
+B Channasandra Bridge(Ramamurthy Nagara Ring Road),21692,13.01329,77.66193
+B Channasandra Bridge(Ramamurthy Nagara Ring Road),21694,13.01311,77.66257
+B Channasandra Bridge(Ramamurthy Nagara Ring Road),21695,13.01318,77.66272
+B Channasandra Bridge(Ramamurthy Nagara Ring Road),22651,13.0112,77.66232
+B Channasandra Bridge(Ramamurthy Nagara Ring Road),37623,13.01229,77.66199
+B Hosur Circle,29613,12.7425,77.44816
+B Hosur Circle,35644,12.74247,77.4482
+B Hosur Water Tank,29614,12.74258,77.45109
+B Krishnappa Nagara,23251,12.99714,77.40872
+B Marenahalli,29615,13.16635,77.73759
+B Marenahalli,35642,13.16626,77.73752
+B Marenahalli,37948,13.17023,77.73952
+B Nagasandra,29616,12.94368,77.65363
+B Nagasandra,35641,12.94367,77.65359
+B Narayanapura,21696,13.00039,77.68399
+B Narayanapura,21697,13.00028,77.68415
+B Narayanapura Ring Road,20615,12.99583,77.68417
+B Narayanapura Ring Road,20616,12.99589,77.68387
+B Palya Razakapalya,29617,13.1444,77.65941
+B Palya Razakapalya,35640,13.14436,77.6594
+BCC Layout,31927,12.95128,77.52978
+BCC Layout Cross,29805,12.95473,77.53486
+BCMC Layout Raghuvanahalli,29807,12.87838,77.54934
+BCMC Layout Raghuvanahalli,31928,12.87833,77.54947
+BDA Complex Banashankari 2nd Stage,23373,12.9247,77.56428
+BDA Complex Banashankari 2nd Stage,24341,12.92448,77.56464
+BDA Complex Cross Nagarabhavi,29809,12.97211,77.51293
+BDA Complex Cross Nagarabhavi,31929,12.97199,77.51278
+BDA Complex HBR Layout,29811,13.02589,77.62809
+BDA Complex HBR Layout,31930,13.02577,77.62812
+BDA Complex HSR Layout,23716,12.91282,77.63805
+BDA Complex HSR Layout,23925,12.91296,77.63807
+BDA Complex Koramangala,21730,12.93109,77.62248
+BDA Complex Koramangala,21731,12.93094,77.62221
+BDA Complex Nagarabhavi,35397,12.97958,77.51064
+BDA Complex Nagarabhavi,35404,12.97938,77.51073
+BDA Flats Kommaghatta,29814,12.91473,77.46208
+BDA Park Bande Maramma Temple,31932,12.96948,77.5148
+BDS Nagara,29820,13.0657,77.64308
+BDS Nagara,31934,13.06573,77.64309
+BEL Circle,20636,13.04639,77.55583
+BEL Circle,20637,13.0452,77.55669
+BEL Circle,21463,13.04376,77.55806
+BEL Circle,21464,13.04402,77.55489
+BEL Circle,21734,13.04588,77.55654
+BEL Circle,29841,13.04345,77.55702
+BEL Factory,21735,13.04887,77.55861
+BEL Hospital,21736,13.04987,77.55755
+BEL Hospital,21737,13.05064,77.55745
+BEL Layout Dasanapura,29843,13.09151,77.42363
+BEL Layout Dasanapura,31946,13.09139,77.42347
+BEL Market,31947,13.05189,77.55192
+BEL Market 1,35683,13.05192,77.55193
+BEML Complex,29870,12.91973,77.52028
+BEML Complex,31960,12.91952,77.52033
+BEML Factory,36497,12.97146,77.65908
+BEML Gate,21743,12.97146,77.65859
+BEML Gate,24153,12.9714,77.65873
+BEML Layout 5th stage,29871,12.90685,77.52137
+BEML Layout 5th stage,35925,12.90681,77.52108
+BEML Layout Gate,20640,12.96083,77.71641
+BEML Layout Gate,20641,12.96054,77.7165
+BGS College Chikkaballapura,38000,13.39551,77.72662
+BGS College Chikkaballapura,38001,13.39584,77.72679
+BGS College Gate Devagere,29953,12.84759,77.46868
+BGS College Gate Devagere,32007,12.84762,77.46871
+BGS Health City Gate Abhiman Studio,21753,12.90714,77.49909
+BGS Health City Gate Abhiman Studio,21754,12.90706,77.49921
+BGS International Residential School,32009,12.84663,77.46205
+BGS PU College Thotagere,20658,13.14427,77.45146
+BGS PU College Thotagere,29959,13.14428,77.45141
+BGS School Banandur,29961,12.77941,77.39728
+BGS School Banandur,32010,12.77952,77.39727
+BHEL,20661,12.94874,77.53559
+BHEL,20662,12.84492,77.66026
+BHEL,20663,12.8452,77.66026
+BHEL,20664,12.94872,77.53583
+BHEL,23997,12.84506,77.65993
+BHEL Concord Layout,32036,12.90822,77.50942
+BHEL Layout,32037,12.91624,77.50835
+BHEL Layout Cross,30018,12.91577,77.51103
+BHEL Layout Cross,32038,12.91617,77.51305
+BHEL Layout Cross,32039,12.91583,77.51098
+BHEL Layout Maramma Temple,32040,12.92192,77.5088
+BHEL Layout Water Tank,30022,12.91895,77.50906
+BHEL Layout Water Tank,32041,12.91904,77.50901
+BIES Kuduregere,32073,13.06249,77.46974
+BK Circle,30131,12.87067,77.58316
+BK Circle,32100,12.87062,77.58325
+BK Circle,35060,12.87056,77.58309
+BME-1 NICE Road,30136,12.91943,77.53179
+BME-1 NICE Road,32101,12.91947,77.53196
+BME-2 NICE Road,30138,12.89334,77.51352
+BME-2 NICE Road,32102,12.89345,77.51346
+BMSIT College Campous Yelahanka,30141,13.1337,77.56811
+BMTC Training Centre,30147,13.01991,77.44837
+BMTC Training Centre,32105,13.01994,77.44841
+BN Bachegowda Badavane,30148,12.9627,77.84542
+BN Bachegowda Badavane Colony,30150,12.96279,77.84504
+BN Bachegowda Badavane Colony,32106,12.96278,77.84512
+BOB Colony,38508,12.89299,77.5864
+BP Indian School Nelamangala,30189,13.0877,77.37529
+BP Indian School Nelamangala,32126,13.08764,77.37555
+BPL,20680,12.98525,77.74828
+BPL,20681,12.98531,77.74768
+BPL,35109,12.88702,77.59697
+BPL,35232,12.88691,77.59676
+BRV Talkies Cubbon Road,21785,12.97911,77.60273
+BRV Talkies Cubbon Road,30209,12.97941,77.60223
+BSF Yalahanka,30211,13.12915,77.60494
+BSF Yalahanka,32135,13.12912,77.60492
+BTL College,21786,12.81185,77.69485
+BTL College,21787,12.8117,77.69472
+BTM Layout 16th Main,20571,12.9165,77.60932
+BTM Layout 16th Main,20572,12.91662,77.60912
+BTM Layout 16th Main Road,31345,12.91627,77.61014
+BTM Layout Water Tank,20688,12.91654,77.60711
+BTM Layout Water Tank,20689,12.91667,77.60718
+BTR Garden,23327,12.89033,77.64645
+BTR Garden,23329,12.89028,77.64662
+BTS Layout Basaveshwaranagara,23989,12.97707,77.48056
+BUC ADM Block,20646,12.95005,77.50086
+BUC ADM Block,35428,12.95007,77.50069
+BUC Ladies Hostel,20650,12.94174,77.5061
+BUC Ladies Hostel,20651,12.94187,77.50602
+BUC Library,20652,12.94439,77.50435
+BUC Library,24363,12.9443,77.50421
+BUC Quarters,20655,12.95203,77.49917
+BWSSB Quarters Nayandahalli,20690,12.94013,77.52412
+BWSSB Quarters Nayandahalli,20691,12.93987,77.5236
+BWSSB Tavarekere,30241,12.96999,77.39935
+BWSSB Tavarekere,32150,12.97007,77.39937
+Babasahebarapalya,29619,12.90132,77.46264
+Babasahebarapalya,31857,12.90136,77.46263
+Babusabpalya,20617,13.0226,77.64702
+Babusabpalya,20618,13.02274,77.64721
+Babusabpalya 302,37934,13.02285,77.64747
+Bachahalli Gate,29620,13.21219,77.6732
+Bachahalli Gate,35638,13.21205,77.67332
+Bachahalli Government School,38757,13.24343,77.57954
+Bachenahatti,29622,12.955,77.30395
+Bachenahatti,35636,12.95476,77.30408
+Badekatte,29623,12.8181,77.48975
+Badekatte,35635,12.81806,77.48975
+Badrapura,23263,12.87177,77.42746
+Bagalagunte,20619,13.05665,77.50735
+Bagalagunte,20620,13.05657,77.50728
+Bagalur,21698,13.13468,77.66816
+Bagalur,21699,13.13453,77.66797
+Bagalur,23267,13.1346,77.6679
+Bagalur Colony,29624,13.14146,77.67118
+Bagalur Colony,35634,13.14146,77.6713
+Bagalur Cross,29626,13.12198,77.61061
+Bagalur Cross,31858,13.12184,77.61128
+Bagalur Cross,35633,13.12211,77.61116
+Bagalur Cross,38375,13.12175,77.61129
+Bagalur Santhe,21700,13.13334,77.6668
+Bagalur Santhe,31859,13.13351,77.66675
+Baglur Old police Station,38653,13.12977,77.6667
+Baglur Old police Station,38654,13.12952,77.66661
+Bagmane Tech Park,21701,12.98076,77.65642
+Bagmane Tech Park,21702,12.98065,77.65654
+Bagmane Tech Park (Graphite India),37986,12.97028,77.70706
+Baguru,23272,12.89645,77.84275
+Baguru,23403,12.89677,77.84224
+Baguru Colony,23273,12.89457,77.8465
+Baguru Colony,23404,12.89469,77.84648
+Baladimmanahalli,29631,13.18959,77.74336
+Baladimmanahalli,35631,13.1898,77.74341
+Balaganahalli Cross,35630,12.89314,77.94176
+Balageranahalli Cross,35629,12.78744,77.73468
+Balagere,29634,12.9396,77.72902
+Balagere,35628,12.93963,77.72901
+Balaji Badavane Sulikere,38389,12.93565,77.44331
+Balaji Badavane Sulikere,38390,12.93569,77.44328
+Balaji Layout,29636,12.96005,77.48932
+Balaji Layout,35626,12.96002,77.48914
+Balaji Layout 100ft Road,29637,12.87774,77.53977
+Balaji Layout 100ft Road,35625,12.87772,77.53984
+Balaji Theatre Magadi,29638,12.96057,77.23686
+Balaji Theatre Magadi,35624,12.96052,77.23689
+Balavikas International School,23283,12.96696,77.51453
+Balavikas School Gidadakonenahalli,23284,12.97008,77.4914
+Balekatte,29639,12.9278,77.21031
+Balekatte,35623,12.92767,77.21026
+Balenahalli,23289,12.89576,77.19354
+Balenahalli,23290,12.89564,77.19349
+Balepura,29641,13.1992,77.77885
+Balepura,35621,13.19919,77.77893
+Balepura Gate,21703,13.19791,77.77734
+Balepura Gate,29643,13.19781,77.77705
+Balepura Gate,31860,13.19775,77.777
+Baleveeranahalli,29644,13.0186,77.39394
+Baleveeranahalli,35620,13.01854,77.39391
+Balluru,35619,12.75424,77.78728
+Balluru Cross,29646,12.74978,77.77932
+Balluru Cross,35618,12.74961,77.77939
+Baluvanahalli Cross,29648,13.26238,77.80811
+Bamboo Bazaar,21704,12.99192,77.60332
+Bamboo Bazaar,21706,12.99208,77.60402
+Banahalli,29651,13.21376,77.91228
+Banahalli,35612,13.21369,77.9123
+Banandur Circle,29656,12.77536,77.39841
+Banandur Circle,31861,12.77538,77.39844
+Bananduru,29654,12.77677,77.3979
+Bananduru,35609,12.77677,77.39795
+Banarahalli,29657,12.95716,77.86284
+Banasawadi,22673,13.01452,77.65234
+Banasawadi,36255,13.01441,77.65102
+Banasawadi 100 Feet Road,37807,13.01513,77.64963
+Banasawadi 100 Feet Road,37808,13.01508,77.64969
+Banashankari,20622,12.91679,77.57325
+Banashankari,21711,12.91631,77.57373
+Banashankari 1st Stage Muneshwara Block KEB,21709,12.94211,77.55079
+Banashankari 1st Stage Muneshwara Block KEB,21710,12.94213,77.55061
+Banashankari 3rd Stage 3rd Phase,31865,12.92763,77.5514
+Banashankari 3rd Stage 3rd Phase,31866,12.92761,77.55125
+Banashankari 5th Stage,29670,12.9022,77.52809
+Banashankari Bus Station,20621,12.91765,77.57403
+Banashankari Bus Station,20623,12.91779,77.57272
+Banashankari Bus Station,20624,12.91736,77.5727
+Banashankari Hunasemara,21712,12.92097,77.57407
+Banashankari Hunasemara,21713,12.92084,77.57414
+Banashankari Hunasemara,22062,12.91966,77.57413
+Banashankari Post Office,29673,12.92629,77.56991
+Banashankari Post Office,31869,12.92623,77.56995
+Banaswadi Fire Station,31862,13.01131,77.64604
+Banawadi,29675,13.11759,77.25546
+Banawadi,31870,13.11756,77.25544
+Bandaiahanapalya,20625,13.17629,77.45281
+Bandaiahanapalya,29676,13.17612,77.45279
+Bandapura,29678,12.76981,77.72655
+Bandapura,31871,12.76982,77.72653
+Bandapura Gate,21714,13.04174,77.74453
+Bandapura Gate,21715,13.04228,77.74459
+Bande Bommasandra,29680,13.07664,77.68072
+Bande Bommasandra,31872,13.07672,77.6809
+Bande Bommasandra Cross,29682,13.08121,77.68243
+Bande Bommasandra Cross,31873,13.08122,77.68243
+Bande Inorpalya,29684,12.9366,77.36241
+Bande Inorpalya,31874,12.93666,77.36236
+Bande Kodigehalli,29686,13.17216,77.69082
+Bande Kodigehalli palya,38638,13.1735,77.7063
+Bande Kodigehalli palya,38639,13.17346,77.7061
+Bande Kodigehallipalya Cross,29690,13.17283,77.69107
+Bande Kodigehallipalya Cross,31876,13.17275,77.691
+Bande Maramma Bus Station,29691,12.96712,77.51591
+Bande Mutt Badavane Radiant Enclave,31877,12.91277,77.47358
+Bande Mutt Gate Kengeri,29696,12.91916,77.47743
+Bande Mutt Gate Kengeri,31878,12.91902,77.47752
+Bande Mutt Kunchugal,37784,13.10656,77.25913
+Bande Mutt Kunchugal,37785,13.10654,77.25909
+Bande kodigehalli,29685,13.17202,77.69075
+Bandi Reddy Circle,29699,12.99141,77.56389
+Bandi Reddy Circle,31879,12.99141,77.56384
+Bangarappa Nagara,29703,12.92503,77.52658
+Banglow Sulikere,29705,12.93298,77.45186
+Banglow Sulikere,31881,12.93304,77.45183
+Banjara Layout,29707,13.03832,77.66516
+Banjara Layout,31882,13.03826,77.66533
+Banjarapalya,29709,12.83053,77.4857
+Banjarapalya,31883,12.83047,77.48567
+Bank Amruthahalli,29711,13.06601,77.5983
+Bank Amruthahalli,31884,13.06604,77.59824
+Bank Circle Bashettyhalli,29713,13.258,77.55271
+Bank Circle Bashettyhalli,31885,13.25811,77.55281
+Bank Colony,21716,12.93864,77.55305
+Bank Colony,21717,12.93861,77.55326
+Bannerughatta Circle,29716,12.81382,77.58103
+Bannerughatta Circle,35140,12.81386,77.58123
+Bannerughatta Circle,35145,12.81368,77.58127
+Bannerughatta National Park,22757,12.80092,77.57748
+Bannerughatta National Park,23785,12.80079,77.57787
+Bannigiri,29718,12.75686,77.43642
+Bannigiri,31887,12.75687,77.43645
+Bannigiri Cross,29720,12.74727,77.43325
+Bannigiri Cross,31888,12.74724,77.43327
+Bannikuppe,29722,12.84702,77.38389
+Bannikuppe,31889,12.847,77.38386
+Bannimangala,29724,13.26051,77.5885
+Bapuji Layout Saraswathi Nagara,29726,12.97203,77.52938
+Bapujinagara,20626,12.95321,77.54182
+Baraguru,29730,12.95115,77.88386
+Baraguru,31893,12.95122,77.88394
+Basammanahalli,29733,12.87519,77.35305
+Basammanahalli Cross,29735,12.87484,77.35435
+Basammanahalli Cross,31895,12.8747,77.35432
+Basappa Circle,21718,12.95624,77.57721
+Basappa Circle,29736,12.95601,77.57728
+Basappa Circle,35139,12.95636,77.57717
+Basappa Layout Mattahalli,29738,13.10653,77.45371
+Basappa Layout Mattahalli,31896,13.10656,77.45369
+Basappanapalya,29740,12.83133,77.50046
+Basappanapalya,31897,12.83134,77.50052
+Basappanapalya Cross,29742,12.84253,77.50237
+Basappanapalya Cross,31898,12.84255,77.50238
+Basava Gangotri Samsthe,29745,12.88359,77.45044
+Basavanagara,21719,12.96664,77.68279
+Basavanagara,21720,12.96682,77.68276
+Basavanagara Kengeri,20627,12.90096,77.46736
+Basavanagara Kengeri,20628,12.90106,77.46733
+Basavanagudi Police Station,21721,12.94172,77.57384
+Basavanagudi Police Station,21722,12.94158,77.57374
+Basavanahalli,29748,13.11034,77.3882
+Basavanahalli,31900,13.11038,77.38823
+Basavanahalli Cross,29751,13.10215,77.38867
+Basavanahalli Cross,31901,13.10231,77.38869
+Basavanahalli Cross,31902,13.10223,77.38875
+Basavanapalya,29753,12.93227,77.40009
+Basavanapalya,31903,12.93213,77.40007
+Basavanapura,29760,12.84986,77.38333
+Basavanapura,31904,13.22559,77.57657
+Basavanapura,31906,12.84977,77.3835
+Basavanapura,31909,13.22562,77.57649
+Basavanapura Church,29762,12.84678,77.5932
+Basavanapura Church,31910,12.84671,77.59313
+Basavanapura Gate,22752,12.8463,77.58821
+Basavanapura Gate,22760,12.8463,77.58818
+Basavanna Devasthana CK Palya,29763,12.84391,77.60611
+Basavanna Devasthana CK Palya,35339,12.84393,77.60596
+Basavanna Temple Hoovinayakanahalli,29766,13.16788,77.6886
+Basavanna Temple Hoovinayakanahalli,31911,13.1679,77.6885
+Basavapatna,29768,12.97027,77.17677
+Basavapatna,31912,12.9702,77.17665
+Basavenahalli,29770,13.03853,77.31472
+Basavenahalli,31913,13.03857,77.31479
+Basavenahalli Colony,29773,13.03604,77.3141
+Basavenahalli Colony,31914,13.03605,77.31433
+Basavenahalli Colony,31915,13.03607,77.31428
+Basaveshwara College,20629,12.99436,77.55276
+Basaveshwara College,24194,12.99439,77.5528
+Basaveshwaranagara 1st Phase,29775,12.90643,77.46285
+Basaveshwaranagara 2nd Phase,29776,12.90829,77.461
+Basaveshwaranagara Banandur,29780,12.75942,77.40367
+Basaveshwaranagara Banandur,31917,12.75944,77.40372
+Basaveshwaranagara New Bus Stand,24059,12.98832,77.5336
+Bashettalli,29783,13.26176,77.5527
+Bashettalli,31918,13.26164,77.5526
+Bashyam Circle,29786,13.00564,77.57862
+Bashyam Circle,31919,13.00473,77.57848
+Bashyam Circle Rajajinagara,20631,12.98391,77.55412
+Bashyam Circle Rajajinagara,20632,12.98441,77.5544
+Bashyam Circle Rajajinagara,29788,12.98458,77.55414
+Bashyam Circle Rajajinagara,31921,12.98441,77.55398
+Bashyam Circle Sadashivanagara,20633,13.00628,77.57915
+Bashyam Circle Sadashivanagara,29789,13.0062,77.57905
+Bashyam Nagara Okalipuram,29791,12.98724,77.5677
+Bata Show Room banashankari,37682,12.92348,77.57008
+Bata Show Room banashankari,37683,12.92351,77.57006
+Bayalahalli Gate(Bande kodigehalli),29793,13.16998,77.69009
+Bayalahalli Gate(Bande kodigehalli),31922,13.17001,77.68996
+Bayalu Bandikhane,29795,13.29561,77.73617
+Bayalu Bandikhane,31923,13.29574,77.7359
+Bayyanapalya,21723,12.87558,77.54374
+Bayyanapalya,21724,12.87554,77.54355
+Bayyandahalli,29797,13.00609,77.44226
+Bayyandahalli,31924,13.00608,77.44221
+Bayyandahalli Colony,29799,13.00342,77.44235
+Bayyandahalli Colony,31925,13.00343,77.44231
+Bayyappanahalli,29801,13.07154,77.7207
+Bayyappanahalli,31926,13.07164,77.7208
+Bayyappanahalli Cross,21725,12.98525,77.64246
+Bayyappanahalli Cross,21726,12.98559,77.64255
+Bayyappanahalli Gate,21727,12.99157,77.64327
+Bayyappanahalli Gate,21728,12.9916,77.6433
+Bayyappanahalli Metro Station,20634,12.99001,77.65454
+Bayyappanahalli Metro Station,20635,12.98967,77.65404
+Bayyappanahalli Metro Station  Back Gate,36295,12.99166,77.65212
+Beedi Karmikara Colony,29822,12.91906,77.471
+Beedi Karmikara Colony,31935,12.91811,77.47935
+Beedi Karmikara Colony Gate,29824,12.92237,77.47478
+Beedi Karmikara Colony Gate,31936,12.92228,77.47492
+Beerahalli,29826,13.15748,77.91533
+Beerahalli,31937,13.15743,77.91538
+Beerasandra Chapradakallu,31938,13.28152,77.61485
+Beerasandra Chapradakallu,31939,13.28138,77.61514
+Beerawara,36375,13.0634,77.2746
+Beerawara,36376,13.06362,77.27445
+Beereshwara Nagara,29832,12.88205,77.56545
+Begihalli,24080,12.79796,77.60381
+Begihalli,24230,12.79788,77.60381
+Beguru,29836,13.18348,77.67967
+Beguru,31942,13.13887,77.84328
+Beguru,31944,13.18356,77.67974
+Beguru,35222,12.87364,77.62515
+Beguru,36307,12.87361,77.62535
+Beguru,37610,13.18351,77.67959
+Beguru Lake,24160,12.87783,77.62549
+Beguru Lake,24166,12.87795,77.62532
+Beguru Nice Road Junction,24140,12.85446,77.60949
+Beguru Nice Road Junction,24339,12.85445,77.60943
+Bekary Chunchaghatta,29840,12.88648,77.57068
+Bekary Chunchaghatta,31945,12.88652,77.57071
+Belagumba,29847,12.99482,77.24641
+Belagumba,31948,12.9949,77.24643
+Belenus Hospital Near Carmelram Gate,37980,12.90247,77.70891
+Belenus Hospital Near Carmelram Gate,37981,12.90255,77.709
+Bellahalli,29851,13.09913,77.64209
+Bellahalli,31950,13.09923,77.64223
+Bellahalli Cross,21739,13.10124,77.63492
+Bellahalli Cross,29855,13.10134,77.63618
+Bellahalli Cross,31951,13.10207,77.63351
+Bellahalli Cross,31952,13.10196,77.63362
+Bellahalli Cross,31953,13.10144,77.63606
+Bellahalli Cross THS Main Road,21740,13.10113,77.6351
+Bellanduru City Light Appartment,20639,12.92412,77.67278
+Bellanduru City light Apartment,20638,12.92493,77.67394
+Bellanduru Gate SJP Road,23896,12.91858,77.66991
+Bellanduru Gate SJP Road,23918,12.91864,77.66931
+Bellanduru Petrol Bunk,21091,12.92309,77.6705
+Bellanduru Petrol Bunk,21092,12.92322,77.6702
+Bellathur,21741,13.00417,77.75694
+Bellathur,21742,13.00405,77.75706
+Bellikere,29866,12.93031,77.79724
+Bellikere,31958,12.93038,77.79723
+Bellikere Cross,29868,12.93664,77.79729
+Bendiganahalli,29880,13.2175,77.8312
+Bendiganahalli,31962,13.0671,77.75759
+Bendiganahalli,31963,12.81443,77.74051
+Bendiganahalli,31964,12.81438,77.74047
+Bendiganahalli,31965,13.06721,77.75758
+Bendiganahalli,31966,13.21756,77.8313
+Bendiganahalli Cross,29883,13.20626,77.83458
+Bendiganahalli Cross,31967,13.2063,77.83441
+Bendiganahalli Cross,31968,13.20652,77.83465
+Bengaluru Central Jail,23376,12.8737,77.66617
+Bengaluru Central Jail,23389,12.87368,77.66638
+Bengaluru Children Hospital,31969,12.90986,77.51342
+Bengaluru Children Hospital1,29886,12.90994,77.51354
+Bengaluru Dairy Circle,20642,12.93709,77.60105
+Bengaluru Dairy Circle,20643,12.93716,77.60182
+Bengaluru Dairy Circle,35057,12.93528,77.60129
+Bengaluru Dairy Circle,35108,12.93535,77.60143
+Bengaluru Dairy Circle,35266,12.93909,77.6021
+Bengaluru High School,20644,12.95209,77.56749
+Bengaluru High School,21746,12.95325,77.56762
+Bengaluru University Gate,20647,12.93582,77.51282
+Bengaluru University Gate,20648,12.93537,77.51269
+Bengaluru University Gate,20649,12.93573,77.51332
+Bengaluru University Quarters,21748,12.95176,77.49972
+Bengaluru University Quarters,24302,12.95195,77.50025
+Benniganahalli,20656,12.99428,77.6633
+Benniganahalli,20657,12.99406,77.6632
+Benniganahalli Bridge,29894,12.99718,77.66274
+Benniganahalli Bridge,31971,12.99714,77.66288
+Best County,29896,13.08932,77.54467
+Best County,31972,13.08935,77.5447
+Besthamanahalli,29898,12.73087,77.72666
+Besthamanahalli,31973,12.73084,77.72668
+Bethan Byatha,29900,13.19002,77.48136
+Bethan Byatha,31974,13.19007,77.48137
+Bethimgere,29904,12.85694,77.36489
+Bethimgere Cross,31977,12.86708,77.36815
+Bethimgere Cross,31978,12.86714,77.36812
+Bettadasanapura,24289,12.84157,77.63177
+Bettadasanapura,24347,12.84158,77.63194
+Bettahalasuru Circle,29910,13.16112,77.61103
+Bettahalasuru Circle,31980,13.16108,77.61102
+Bettahalasuru Cross,29914,13.15656,77.62358
+Bettahalasuru Cross,31981,13.1571,77.62336
+Bettahalasuru Cross,31983,13.15676,77.62261
+Bettahalasuru Hospital,29917,13.15922,77.61154
+Bettahalasuru Hospital,31984,13.15926,77.61143
+Bettahalasuru Village,29919,13.16278,77.60861
+Bettahalasuru Village,31986,13.16285,77.60857
+Bettahalli,29925,13.16378,77.38642
+Bettahalli,31988,13.01679,77.4373
+Bettahalli,31991,13.16372,77.38641
+Bettahalli Colony,29929,13.1621,77.38436
+Bettahalli Colony,31992,13.01531,77.44326
+Bettahalli Colony,31993,13.16215,77.38433
+Bettahalli Colony,31994,13.01532,77.44321
+Bettahalli Cross,29931,13.00817,77.43473
+Bettahalli Cross,31995,13.00812,77.4348
+Bettahalli Gate,29935,13.19325,77.81307
+Bettahalli Gate,31997,13.19324,77.81308
+Bettahalli Kaval,29937,12.73521,77.50922
+Bettahalli Kaval,31999,12.73518,77.50918
+Bettahalli Layout,21749,13.09238,77.55958
+Bettahalli Layout,21750,13.0924,77.55947
+Bettahallipalya,29939,13.16176,77.39286
+Bettahallipalya,32000,13.16168,77.39285
+Bettakote,32002,13.19941,77.73925
+Bettanahalli Site,29947,13.21008,77.58793
+Bettanahalli Site,32004,13.21012,77.58795
+Bettanapalya,29949,12.91202,77.44321
+Bettanapalya,32005,12.91199,77.44335
+Bettenahalli,29951,13.20872,77.5882
+Bettenahalli,32006,13.20867,77.5882
+Bevina Mara Kannamangala,21751,13.02801,77.76027
+Bevina Mara Kannamangala,21752,13.02809,77.76037
+Bhadrappa Layout,20659,13.0472,77.57339
+Bhadrappa Layout,20660,13.04752,77.57595
+Bhagwan Mahaveer Jain Hospital,38454,12.99059,77.59596
+Bhagya Nagara,29970,12.86084,77.58551
+Bhagya Nagara,35342,12.86091,77.58543
+Bhaktharahalli,32017,13.02193,77.79627
+Bhaktharahalli,32018,13.02196,77.79627
+Bhaktharahalli,32019,13.02044,77.79462
+Bhaktharahalli Cross,29978,13.01851,77.78448
+Bhaktharahalli Cross,32020,13.01852,77.78438
+Bhakthi Yoga Ashrama,29980,13.02256,77.68928
+Bhakthi Yoga Ashrama,32021,13.02262,77.6893
+Bhakthipura Cross,29983,12.75735,77.76188
+Bhakthipura Cross,32022,12.75742,77.76182
+Bhantaraguppe,29985,12.98787,77.27363
+Bhantaraguppe,32023,12.98786,77.27372
+Bharath Nagara 1st Phase,29990,12.98118,77.48508
+Bharath Nagara 1st Phase,35251,12.98117,77.48513
+Bharath Nagara 2nd Stage,23988,12.97866,77.47789
+Bharath Nagara 2nd Stage,24292,12.97868,77.47781
+Bharath Petrol Bunk Thyamagondlu,36068,13.21928,77.29097
+Bharathi Nagara,29992,13.1374,77.61746
+Bharathi Nagara,32026,13.13752,77.61764
+Bharathi Nursing Home Jayanagara,29994,12.93683,77.57396
+Bharathi Nursing Home Jayanagara,32027,12.9369,77.57404
+Bharathnagara Sunkadakatte,29996,12.97958,77.50203
+Bharathnagara Sunkadakatte,32028,12.97957,77.50205
+Bhartiya City Chokkanahalli,38951,13.08341,77.64253
+Bhattarahalli,21755,13.01951,77.70898
+Bhattarahalli,21756,13.02046,77.70985
+Bhattarahalli,38686,13.01892,77.70878
+Bhattarahalli Cross,29998,13.01618,77.70932
+Bhattarahalli Cross,32029,13.01616,77.70931
+Bhavani Nagara 2nd Stage,30000,12.96316,77.48186
+Bhavani Nagara 2nd Stage,32030,12.96323,77.48182
+Bhavani Nagara 2nd Stage Cross,30002,12.96072,77.48821
+Bhavani Nagara 2nd Stage Cross,32031,12.96075,77.48813
+Bhavapura,30004,13.18427,77.8704
+Bheemajyothi Nagara Shankara Mutt,30006,13.00219,77.54073
+Bheemajyothi Nagara Shankara Mutt,32033,13.00257,77.54096
+Bheemanakuppe,30008,12.90418,77.43814
+Bheemanakuppe,32034,12.90409,77.43824
+Bheemanakuppe Cross,30010,12.89465,77.43682
+Bheemanakuppe Cross,32035,12.89479,77.43676
+Bhimakanahalli Gate,30027,13.13531,77.85597
+Bhimakanahalli Gate,32043,13.13529,77.85584
+Bhodhana Hosahalli,21759,12.97886,77.80248
+Bhodhana Hosahalli,21760,12.97884,77.80247
+Bhoganahalli,23511,12.92644,77.70108
+Bhokipura,30029,12.73601,77.47455
+Bhokipura,32044,12.73597,77.47426
+Bhoopasandra,20665,13.04244,77.58086
+Bhoopasandra,20666,13.04247,77.5808
+Bhoopasandra Ayyappa Bakery,20667,13.04263,77.57715
+Bhoopasandra Ayyappa Bakery,20668,13.04265,77.57706
+Bhovi Colony,30031,12.88837,77.67608
+Bhovipalya,30034,13.20209,77.62376
+Bhovipalya,32046,13.20166,77.64511
+Bhovipalya,32047,13.20163,77.64509
+Bhovipalya,35148,12.8935,77.79742
+Bhovipalya,35257,12.89336,77.79745
+Bhuvanahalli,32048,13.21793,77.68191
+Bhuvanahalli,32049,13.18513,77.8616
+Bhuvanahalli,32050,13.18512,77.86156
+Bhuvanahalli Gate,30042,13.21859,77.6798
+Bhuvanahalli Gate,32051,13.2187,77.67964
+Bhuvaneshwari Nagara,30048,13.03713,77.49131
+Bhuvaneshwari Nagara,32053,13.03719,77.4913
+Bhuvaneshwari Nagara,32054,13.03216,77.60482
+Bhuvaneshwari Nagara,32055,12.92295,77.54897
+Bhuvaneshwari Nagara,32056,12.92298,77.54904
+Bhuvaneshwari Nagara,32057,13.0322,77.60487
+Bhuvaneshwari Nagara 1st Stage,30050,12.94227,77.4903
+Bhuvaneshwari Nagara 1st Stage,32058,12.94222,77.49044
+Bhuvaneshwari Nagara 2nd Stage,30052,12.94259,77.48713
+Bhuvaneshwari Nagara 2nd Stage,32059,12.94262,77.48728
+Bhuvaneshwari Nagara Mahalakshmi Temple,30053,12.92191,77.55084
+Bhuvaneshwari Petrol Bunk,30055,13.1392,77.35126
+Bhuvaneshwari Petrol Bunk,32060,13.13876,77.35144
+Bible  College Byrathi,21761,13.07137,77.65145
+Bible  College Byrathi,21762,13.07144,77.65155
+Bidadi,21465,12.79678,77.38496
+Bidadi,35913,12.7969,77.38458
+Bidadi Railway Station,21466,12.79973,77.39107
+Bidadi Railway Station,21467,12.79976,77.39082
+Bidalapura,30059,13.18779,77.7708
+Bidalapura,32062,13.1877,77.7706
+Bidalapura Cross,30063,13.19681,77.77788
+Bidalapura Cross,32063,13.18946,77.76205
+Bidalapura Cross,32064,13.19676,77.77791
+Bidalapura Cross,32065,13.18945,77.76202
+Bidaragere,30064,12.71566,77.72302
+Bidaraguppe,21764,12.80585,77.78349
+Bidaraguppe,21765,12.80593,77.7836
+Bidaraguppe,32066,12.80605,77.7833
+Bidarahalli,25040,13.06538,77.71704
+Bidarahalli,32512,13.06539,77.71696
+Bidarahalli Cross,30069,13.057,77.71509
+Bidarahalli Cross,32069,13.05692,77.71517
+Bidarahalli Cross,32070,13.05689,77.71506
+Bidarahalli Dargah,38746,13.06834,77.70807
+Bidarahalli School,32067,13.06024,77.71619
+Bidarahalli School,32068,13.05997,77.71626
+Bidiganahalli Cross,21767,13.25622,77.80463
+Bidiganahalli Cross,30077,13.2565,77.80477
+Big Bazzar  ITPL,20669,12.98795,77.7318
+Big Bazzar ITPL,20670,12.98823,77.73197
+Big Bazzar ITPL,21768,12.98827,77.73061
+Big Market Sahakaranagara,32074,13.06257,77.59289
+Bikashipura,24352,12.89807,77.55757
+Bikashipura,35405,12.89818,77.55768
+Bikkana Hosahalli,30085,12.84754,77.7638
+Bikkana Hosahalli,32076,12.84762,77.7637
+Bikkanahalli,30087,12.83672,77.76003
+Bikkanahalli,32077,12.83667,77.75999
+Bilavaradahalli,23740,12.83622,77.57676
+Bilavaradahalli,23858,12.83624,77.57677
+Bilavaradahalli Cross,30092,12.82244,77.57238
+Bilavaradahalli Cross,32079,12.82247,77.57236
+Bileshivale,30099,13.0546,77.6709
+Bileshivale,32082,13.05453,77.67094
+Bileshivale,32083,13.05449,77.67093
+Bilijaji,30101,13.12638,77.47337
+Bilijaji Cross,30103,13.12583,77.47565
+Bilikallu,23990,12.97515,77.47996
+Billa Kempanahalli,30104,12.81039,77.40634
+Billa Kempanahalli Gate,21468,12.81212,77.40408
+Billa Kempanahalli Gate,21469,12.81204,77.40384
+Billamaranahalli,32086,13.15063,77.63794
+Billapura,21770,12.83768,77.78504
+Billapura,21771,12.83742,77.785
+Billinakote,30090,13.19793,77.27183
+Billinakote,32078,13.19776,77.27177
+Bingipura,30107,12.8257,77.63222
+Bingipura,35217,12.82575,77.6324
+Bingipura Cross,24147,12.82587,77.62304
+Bingipura Cross,24337,12.82578,77.62297
+Binnamangala,20671,12.98384,77.64002
+Binnamangala,20672,12.98331,77.63834
+Binnamangala,21772,12.9835,77.64067
+Binnamangala,21774,13.08745,77.41256
+Binnamangala,35957,12.98368,77.64049
+Binnamangala Gokare,36673,13.25365,77.74268
+Binnamangala Gokare,36674,13.25355,77.74266
+Binnamangala Towads Nelamangala),30108,13.08744,77.41242
+Binny MIll,20673,12.9653,77.56817
+Binny Mill,21470,12.97036,77.56621
+Binny Mill,21471,12.97052,77.56624
+Binny Mill ETA Garden,38112,12.97325,77.56639
+Binnypet,21472,12.96448,77.56171
+Binnypet,21473,12.96468,77.56176
+Biocon Jigani Road,23878,12.80784,77.6638
+Biocon Jigani Road,23887,12.80824,77.66382
+Birla Haralur Road,30110,12.8942,77.6571
+Bisanahalli,32089,13.00891,77.81306
+Bisanahalli,32090,13.00884,77.81304
+Bisanahalli Cross,30116,13.00916,77.81418
+Bisanahalli Cross,32091,13.00916,77.81419
+Biscuits Factory,30120,12.98904,77.81303
+Biscuits Factory,32092,12.989,77.81324
+Biscuits Factory,32093,13.08217,77.44976
+Biscuits Factory,32094,13.08213,77.44975
+Bishop Coton Girls High School,36208,12.96889,77.6014
+Biskur,32095,13.08798,77.14034
+Bittasandra,32097,13.10755,77.28668
+Bittasandra,32098,13.1075,77.2867
+Bittasandra Colony,30129,13.10588,77.29434
+Bittasandra Colony,32099,13.10583,77.29431
+Bloom Field Garden,36486,13.06557,77.55318
+Bloom Field Garden,36487,13.06573,77.55331
+Bolamaranahalli,30152,13.15942,77.39788
+Bolamaranahalli,32107,13.15935,77.39782
+Bolare,23552,12.75429,77.48468
+Bolare Gate,23625,12.75413,77.48462
+Bombay Dyeing Yashwanthapura,23335,13.02491,77.55748
+Bombay Dyeing Yashwanthapura,24272,13.02491,77.55751
+Bombay Estate Guruvanahalli,30154,13.05288,77.35565
+Bombay Estate Guruvanahalli,32108,13.05285,77.35568
+Bommachanahalli,32109,12.80418,77.31468
+Bommachannahalli,38487,12.80413,77.31467
+Bommanabande,30159,13.01218,77.87175
+Bommanabande,32110,13.01208,77.87171
+Bommanahalli,20674,12.90559,77.63003
+Bommanahalli,20675,12.90477,77.62999
+Bommanahalli,30164,13.1213,77.36814
+Bommanahalli,32112,12.9064,77.6297
+Bommanahalli,32113,13.12141,77.3683
+Bommanahalli,32114,12.90631,77.62987
+Bommanahalli,35164,12.90696,77.6285
+Bommanahalli,35221,12.90678,77.62847
+Bommanahalli Fly Over,35780,12.9056,77.62989
+Bommanahalli Fly Over,35782,12.90488,77.63017
+Bommandahalli,30167,12.75406,77.64278
+Bommandahalli,32115,12.75404,77.64274
+Bommasandra,21775,12.81865,77.6894
+Bommasandra,21776,12.81932,77.68858
+Bommasandra,23875,12.82097,77.68687
+Bommasandra,23891,12.81857,77.68864
+Bommasandra,37910,12.81893,77.68939
+Bommasandra Canara Bank,36711,12.82135,77.68772
+Bommasandra Village,38655,12.8169,77.69891
+Bommashettyhalli,32116,13.1308,77.41895
+Bommashettyhalli Cross,30171,13.12581,77.41664
+Bommashettyhalli Cross,32117,13.12586,77.41666
+Bommawara Gate,30175,13.26641,77.67758
+Bommawara Gate,32119,13.26594,77.67758
+Bommenahalli,30177,13.07442,77.74688
+Bommenahalli,32120,13.07449,77.7468
+Bommenahalli Colony,30179,13.07128,77.74521
+Bommenahalli Colony,32121,13.07103,77.74504
+Bommenahalli Cross,29650,13.23576,77.75088
+Bone Mill,20676,13.06385,77.50508
+Bone Mill,20677,13.06383,77.50494
+Bone Mill,20678,13.06385,77.50503
+Booathanahalli,30239,12.80447,77.5603
+Book Factory Thanisandra,21777,13.06161,77.63322
+Book Factory Thanisandra,21778,13.06159,77.63336
+Boorugunte,21779,12.84231,77.78376
+Boorugunte,21780,12.8422,77.78376
+Boothanahalli,32149,12.80452,77.56044
+Boppanahalli Chikkapura,38184,12.99584,77.90308
+Boppanahalli Chikkapura,38185,12.99583,77.90307
+Bordugallu,30181,12.96819,77.28955
+Bordugallu,32122,12.96825,77.28958
+Borehalli,30185,12.84352,77.35808
+Borehalli,32124,12.84339,77.35806
+Born Babies,38138,12.90929,77.63806
+Born Babies,38139,12.90929,77.63804
+Bosch Main Gate Bidadi,32125,12.80023,77.42076
+Brahma Devara Gudda,30192,12.96334,77.47212
+Bridge Kalyananagara,30195,12.96922,77.51697
+Bridge Kalyananagara,32128,12.96919,77.51716
+Brigade Atmosphere,25052,13.26543,77.73925
+Brigade Atmosphere,32519,13.26541,77.73924
+Brigade Meadows Kanakapura Road,36502,12.81432,77.50684
+Brigade Meadows Kanakapura Road,36503,12.81437,77.50685
+Brigade Millenium,23452,12.89213,77.58192
+Brigade Millenium,23474,12.89224,77.58172
+Brigade Millenium,38507,12.89217,77.58329
+Brigade Omega Apartment,30200,12.89286,77.52894
+Brigade Omega Apartment,32130,12.89301,77.52884
+Brigade Palm Springs,38509,12.89514,77.58613
+Brigade Palm Springs,38512,12.89508,77.58628
+Brigade Road,23657,12.97149,77.60678
+Bristol Quarters,23431,12.98855,77.66239
+Broad Casting Compound Kadanur,30202,13.25794,77.489
+Broad Casting Compound Kadanur,32131,13.25791,77.48905
+Brook Haven JP Nagara 8th Phase,30204,12.87155,77.57624
+Brook Haven JP Nagara 8th Phase,32132,12.87154,77.57604
+Brook Steel ESI,21781,12.9931,77.70535
+Brook Steel ESI,21782,12.99295,77.70547
+Brooke Bond,21783,12.96454,77.74869
+Brooke Bond,21784,12.96392,77.74833
+Brundavana Nagara,20682,12.95049,77.55553
+Brundavana Nagara,20683,12.95042,77.5555
+Brundavana Peenya,20684,13.02024,77.50803
+Brundavana Peenya,20685,13.02038,77.50815
+Brundavana School Maralawadi,30206,12.61755,77.52121
+Brundavana School Maralawadi,32133,12.61763,77.52116
+Brundavana Vaddarahalli,30208,13.024,77.44946
+Budigere,21788,13.13511,77.74756
+Budigere,30214,13.1351,77.74751
+Budigere Cross,21790,13.04603,77.75054
+Budigere Cross,21791,13.04651,77.75054
+Budigere Cross,36723,13.04651,77.75021
+Budihal,32138,13.13494,77.36227
+Budihal,32139,13.13502,77.36225
+Budihal Gate,30224,13.13108,77.35881
+Budihal Gate,32141,13.2243,77.73865
+Budihal Gate,32142,13.22424,77.73869
+Budihal Gate,32143,13.13119,77.35895
+Budumanahalli,30226,13.19088,77.52794
+Budumanahalli,32144,13.19091,77.52791
+Budumanahalli Cross,30228,13.18592,77.54021
+Budumanahalli Cross,32145,13.186,77.54023
+Bukkasagara,30230,12.77898,77.61961
+Bukkasagara,32146,12.77881,77.61964
+Bullahalli,38666,13.30723,77.73054
+Buragamarada Palya,30235,13.06408,77.32832
+Buragamarada Palya,32148,13.06377,77.32852
+Burumarana Doddy,30236,12.78692,77.31067
+Burumarana Doddy,38480,12.78694,77.31071
+Byadarahalli,21474,12.9852,77.48196
+Byadarahalli,21475,12.98504,77.48214
+Byadarahalli,32151,12.98697,77.25673
+Byadarahalli Gate,30248,12.99366,77.25514
+Byadarahalli Gate,32154,12.99377,77.25509
+Byagadadenahalli,30252,12.75241,77.70262
+Byagadadenahalli,32156,12.75247,77.7028
+Byagadadenahalli Gate,23839,12.75232,77.70668
+Byagadadenahalli Gate,23979,12.75211,77.70668
+Byalahalli,30256,12.93978,77.81526
+Byalahalli,32157,13.16975,77.6813
+Byalahalli,32158,12.93962,77.81532
+Byalahalli,32159,13.16978,77.68134
+Byalahalli Garment,30258,12.9455,77.81544
+Byalahalli Garment,32160,12.94531,77.81545
+Byalalu,30260,12.89194,77.37637
+Byalalu,32161,12.89185,77.3763
+Byatarayana Doddy,23853,12.81634,77.55078
+Byatarayana Doddy,24151,12.8163,77.5508
+Byatarayana Doddy Cross,32164,12.80373,77.54362
+Byatarayana Doddy Cross,32165,12.80368,77.54362
+Byatarayana Doddy Cross 1,34804,12.80375,77.54358
+Byatarayanapura,30270,13.06723,77.59354
+Byatarayanapura,32166,13.06715,77.5938
+Byatarayanapura,35107,13.06645,77.59294
+Byatarayanapura,35273,13.0669,77.5933
+Byatha,30272,13.19309,77.48456
+Byatha,32167,13.19313,77.48455
+Byatha Cross,30274,13.19307,77.48622
+Byatha Cross,32168,13.1931,77.48626
+Bychakuppe,30276,12.97049,77.38862
+Bychakuppe,32169,12.97051,77.38868
+Bychapura,30279,13.22435,77.71285
+Bychapura,32170,13.22421,77.71283
+Bychapura,32171,13.22432,77.71283
+Bychapura Appartment,30281,13.22219,77.71777
+Bychapura Appartment,32172,13.22216,77.71777
+Bychohalli,30283,12.80653,77.43822
+Bychohalli,32173,12.8063,77.43817
+Bylakonenahalli,30284,13.01612,77.45648
+Bylanarasapura,30288,13.17716,77.93472
+Bylanarasapura,32174,13.17716,77.93476
+Bylanarasapura,32176,13.17713,77.93471
+Bylanjaneya Swamy Temple Gollahalli,30290,13.15011,77.40965
+Bylanjaneya Swamy Temple Gollahalli,32177,13.1501,77.40957
+Byra Doddy Circle,30294,12.79486,77.38918
+Byra Doddy Circle,32179,12.79493,77.38921
+Byramangala,30296,12.74876,77.42431
+Byramangala,32180,12.74879,77.42433
+Byramangala Circle,30298,12.7498,77.42214
+Byramangala Circle,32181,12.74986,77.42207
+Byramangala Cross,21477,12.80246,77.39725
+Byramangala Cross,30299,12.80181,77.39781
+Byramangala Cross,35399,12.80222,77.39714
+Byranahalli Cross,30303,13.15387,77.33824
+Byranahalli Cross,32183,13.15384,77.33819
+Byranayakanahalli,30305,13.19938,77.37682
+Byranayakanahalli,32184,13.19911,77.37649
+Byranayakanahalli Railway Station,27841,13.19406,77.38192
+Byranayakanahalli Railway Station,34323,13.19402,77.38186
+Byrapura,30310,13.20109,77.52295
+Byrapura,32186,13.2011,77.52304
+Byrasandra,32187,12.83492,77.48543
+Byrasandra,32188,12.83495,77.48547
+Byrasandra Aralumallige,30315,13.24807,77.52098
+Byrasandra Aralumallige,32189,13.24803,77.52086
+Byrasandra Cross,21793,12.97546,77.66812
+Byrasandra Cross,23541,12.97556,77.66801
+Byrasandra Dinne,30318,13.23955,77.84697
+Byrasandra Dinne,32190,13.23972,77.84812
+Byrasandra New Bus Stand,30319,12.93549,77.59001
+Byrasandrapalya Gate,30321,13.24244,77.52233
+Byrasandrapalya Gate,32191,13.24243,77.52225
+Byrashettyhalli,30323,13.15659,77.40339
+Byrashettyhalli,32192,13.15656,77.40332
+Byrathi,30325,13.05609,77.652
+Byrathi,32193,13.05602,77.65196
+Byrathi Bande,21794,13.078,77.65342
+Byrathi Bande,21795,13.07788,77.65345
+Byrathi Bande,30326,13.07794,77.65355
+Byrathi Cross,21796,13.05702,77.64822
+Byrathi Cross,21797,13.05702,77.64834
+Byrathi Cross,30327,13.05708,77.64845
+Byraveshwara Layout,20692,13.06413,77.49493
+Byraveshwara Layout,20693,13.06417,77.49494
+Byraveshwaranagara,21478,12.96501,77.52338
+Byraveshwaranagara,21798,12.96519,77.52334
+Byregowdanahalli Colony,30331,13.06449,77.39379
+Byregowdanahalli Colony,32195,13.06434,77.39376
+Byregowdanahalli2,32996,13.05913,77.39389
+Byregowdanahalli3,26047,13.05926,77.39389
+Byregowdanapalya Cross,32196,12.91897,77.32371
+Byrohalli,30335,12.92357,77.44909
+Byrohalli,32197,12.92357,77.44915
+Byrohalli Gate,30337,12.93433,77.44829
+Byrohalli Gate,32198,12.93438,77.44817
+C Q A L,24172,13.01175,77.59331
+C R P F Kaggalipura Main Road,24738,12.79567,77.53926
+C R P F Kaggalipura Main Road,32385,12.79562,77.53931
+C R P F Yelahanka,24736,13.12298,77.57554
+C R P F Yelahanka,32384,13.12278,77.57552
+CBI,20698,13.02613,77.58514
+CBI,20699,13.02653,77.58565
+CBI,20700,13.02696,77.58589
+CBI,20701,13.02691,77.58601
+CFSP Farm,32215,13.1786,77.48949
+CFSP Farm,32216,13.17858,77.48946
+CK Palya,23592,12.8334,77.60871
+CK Palya,23952,12.83337,77.60874
+CK Palya Cross,24701,12.84049,77.59373
+CK Palya Cross,35341,12.84055,77.59357
+CK Palya Dinne,23591,12.83831,77.60501
+CK Palya Dinne,23953,12.83828,77.60498
+CK Thandya,24703,12.87023,77.39753
+CK Thandya,32370,12.8703,77.39759
+CK Thandya Cross,24705,12.86548,77.3922
+CK Thandya Cross,32371,12.86545,77.39216
+CK Thandya Junction,30367,12.87609,77.40103
+CMH Hospital,21855,12.97861,77.64648
+CMH Hospital,24707,12.97849,77.64655
+CMH Hospital,35942,12.97838,77.64668
+CMP Centre and School,38872,12.95908,77.6122
+CMRIT College,20721,12.96763,77.71447
+CMRIT College,20722,12.96764,77.71389
+CMTI,20723,13.0307,77.53641
+CMTI,20724,13.03143,77.53561
+CMTI,32373,13.03293,77.53395
+CPRI,24726,13.01484,77.57489
+CPRI,32382,13.01473,77.57499
+CPRI Quarters,20730,13.02217,77.57224
+CPRI Quarters,20731,13.02241,77.5722
+CPWD Quarters HSR Layout,35127,12.91413,77.65182
+CPWD Quarters HSR Layout,35317,12.914,77.65181
+CQAEL CQEAE Complex,36626,13.03664,77.5415
+CQAEL CQEAE Complex,36628,13.03713,77.54174
+CR Police Ground,21495,12.96258,77.5601
+CS-BEML Factory,35746,12.97154,77.65928
+CS-Bhodhana Hosahalli,36369,12.97932,77.80271
+CS-Bone Mill,36359,13.06366,77.5051
+CS-Brigade Millenium,36214,12.8924,77.58191
+CS-Channasandra,36370,12.9833,77.76801
+CS-Chikkabanavara,36648,13.0805,77.50257
+CS-Gottigere,36516,12.85618,77.58881
+CS-Head Start School Kommasandra,36231,12.86047,77.73498
+CV Raman Nagara,24744,12.98564,77.66401
+CV Raman Nagara,35262,12.98555,77.66382
+CV Raman Nagara Railway Gate,36731,12.98344,77.67973
+CWS-3 BMTC,24745,12.90408,77.4499
+Cable Factory Ittagallapura,30339,13.17404,77.54044
+Cable Factory Ittagallapura,32199,13.174,77.54049
+Cadabams,32200,12.79785,77.52866
+Cambridge North Campus,38163,13.24594,77.61288
+Cambridge North Campus,38164,13.24591,77.6129
+Cambridge Public School Yalahanka,30346,13.09417,77.58942
+Canara Bank Begur,23809,12.88518,77.62516
+Canara Bank Begur,23815,12.88501,77.62508
+Canara Bank Hebbala,20694,13.0357,77.58909
+Canara Bank Hebbala,20695,13.03581,77.58886
+Canara Bank Koramangala,21799,12.93407,77.62369
+Canara Bank Koramangala,21800,12.93524,77.62426
+Canara Bank Millers Road,30350,12.99549,77.60169
+Canara Bank Millers Road,32204,12.99556,77.60172
+Canara Bank Rajajinagara 1st Block,24187,13.00089,77.55044
+Canara Bank Subramanyanagara,30352,13.0047,77.55996
+Canara Bank Subramanyanagara,32205,13.00466,77.55993
+Canara Bank Tannery Road,21801,13.00615,77.61238
+Canara Bank Tannery Road,21802,13.00625,77.61245
+Canara Bank Vidyaranyapura,21803,13.07176,77.55618
+Canara Bank Vidyaranyapura,21804,13.07171,77.55609
+Cantonment Railway Station,21805,12.99384,77.59712
+Cantonment Railway Station,32206,12.99475,77.59711
+Cargo Village,37968,13.19967,77.68231
+Cargo Village,38068,13.19956,77.68225
+Carmel Convent Jayanagara,24373,12.92711,77.59722
+Carmel Convent Jayanagara,35111,12.92708,77.59711
+Carmel Convent Jayanagara,35147,12.9268,77.59713
+Carmel Convent Jayanagara,35199,12.92643,77.59724
+Carmelaram Railway Station,34324,12.9072,77.70537
+Carmelram Gate,23900,12.90352,77.70401
+Carmelram Gate,23914,12.90343,77.70399
+Carmelram Railway Station,27843,12.90719,77.70544
+Carmelram School Railway Gate,24377,12.9095,77.7059
+Carmelram School Railway Gate,32208,12.90975,77.70602
+Cauvery Bhavana,20696,12.97438,77.58183
+Cauvery Bhavana,20697,12.97372,77.58157
+Cauvery Nagara,24379,12.99965,77.53048
+Cauvery Nagara,32209,12.99965,77.53073
+Cauvery Public School Sahakarnagara,24380,13.06061,77.58162
+Cauvery School Sahakara Nagara,24381,13.06108,77.58779
+Cauvery School Sahakara Nagara,35276,13.06102,77.58772
+Center for Learning School Campus Magadi Road,24383,12.98016,77.37505
+Center for Learning School Campus Magadi Road,32211,12.9795,77.37505
+Central,20702,12.99006,77.57199
+Central,20703,12.9898,77.57204
+Central,23426,12.98984,77.57181
+Central Silk Board,20704,12.91689,77.62177
+Central Silk Board,20707,12.91803,77.62355
+Central Silk Board,21479,12.91721,77.62225
+Central Silk Board,32213,12.91736,77.6236
+Central Silk Board,35768,12.91472,77.62452
+Central Silk Board,35943,12.91816,77.62232
+Central Silk Board,35944,12.91806,77.62215
+Central Silk Board,37850,12.91756,77.62379
+Centre For Learning School,21480,12.95914,77.30874
+Chaithanya Samarpan Apartment,21808,13.0207,77.76206
+Chaithanya Samarpan Apartment,21809,13.02191,77.76208
+Chakkalatti,21810,13.12255,77.66823
+Chakkalatti,21811,13.12256,77.66836
+Challaghatta,32217,12.94603,77.64913
+Challaghatta,32218,12.94606,77.64913
+Challahalli,24398,13.21742,77.50635
+Challahalli,32220,13.21739,77.50643
+Challahalli Colony,24399,13.21663,77.50507
+Challahalli Colony,31359,13.21664,77.50502
+Challeghatta,24396,12.89663,77.45333
+Challeghatta,32219,12.89669,77.45344
+Chamarajapet,20709,12.95714,77.56801
+Chamarajapet,20710,12.95707,77.56705
+Chamarajapet,21812,12.95627,77.56744
+Chamarajapet,22770,12.95764,77.56736
+Chamarajapet,23479,12.96033,77.56255
+Chambenahalli,21813,12.8793,77.7617
+Chambenahalli,21814,12.87932,77.7616
+Chamundeshwari Layout,21815,13.06488,77.55966
+Chamundeshwari Layout,21816,13.06456,77.55949
+Chamundi Nagara,32222,13.01475,77.42046
+Chamundi Nagara,32223,13.01471,77.42038
+Chandapura,21817,12.80258,77.70457
+Chandapura,21818,12.80227,77.7045
+Chandapura,35123,12.80285,77.70476
+Chandapura,35916,12.80181,77.70512
+Chandapura,36706,12.80275,77.7046
+Chandapura KEB,23834,12.79869,77.70605
+Chandapura KEB,23985,12.79852,77.70598
+Chandra Layout,22776,12.95925,77.52671
+Chandra Layout 1st Stage,20711,12.95448,77.52244
+Chandra Layout Circle,20712,12.95815,77.5265
+Chandra Layout Circle,20713,12.95817,77.52669
+Chandra Nagara,24406,12.90062,77.56512
+Chandra Nagara Cross,24408,12.89935,77.56117
+Chandra Nagara Cross,32224,12.89938,77.56118
+Chandra Public School,20714,12.96046,77.52963
+Chandra Public School,20715,12.96029,77.52954
+Chandrappa Circle,24411,12.91049,77.36962
+Chandrappa Circle,32225,12.91059,77.36979
+Chandrappanagara,38775,12.9412,77.60247
+Chandrappanagara,38776,12.9413,77.60255
+Chandurayanahalli,24414,12.97295,77.19659
+Chandurayanahalli,32227,12.97286,77.19669
+Channa Marayyanapalya,24415,12.98134,77.36478
+Channa Nayakanapalya,24416,13.04428,77.48518
+Channadasipalya,21481,12.97091,77.4147
+Channadasipalya,21482,12.97085,77.41485
+Channadevi Agrahara,24420,13.21878,77.45507
+Channadevi Agrahara,32229,13.21788,77.45816
+Channadevi Agrahara,32230,13.21881,77.45509
+Channadevi Agrahara Cross,24422,13.21572,77.45564
+Channadevi Agrahara Cross,32231,13.2157,77.4556
+Channahalli Gate,32232,13.21268,77.75496
+Channahalli Gate,32233,13.2128,77.7549
+Channakeshavanagara,24427,12.87791,77.65491
+Channakeshavanagara,32234,12.8781,77.65481
+Channammanakere Achukattu,22727,12.9283,77.5565
+Channammanapalya,24430,12.7628,77.46399
+Channammanapalya,32235,12.76282,77.46397
+Channappa Circle,24432,12.91021,77.37336
+Channapura Gate,24434,13.10328,77.86663
+Channapura Gate,32237,13.10304,77.86669
+Channarayapatna,21819,13.24706,77.79651
+Channarayapatna,24435,13.24714,77.79645
+Channarayapatna School,24437,13.24413,77.79682
+Channarayapatna School,32238,13.24392,77.79693
+Channasandra,21820,12.90285,77.52129
+Channasandra,21821,12.98348,77.7683
+Channasandra,21822,12.98334,77.76702
+Channasandra,21823,12.90285,77.52139
+Channasandra,24439,13.2006,77.50817
+Channasandra,32239,13.20062,77.50809
+Channasandra,35923,12.90289,77.52134
+Channasandra,38634,12.98349,77.76808
+Channasandra Colony,21824,12.90335,77.51628
+Channasandra Colony,21825,12.90331,77.5164
+Channegowdana Doddy,24441,12.80722,77.42929
+Channegowdana Doddy,32240,12.8072,77.42925
+Channenahalli,21483,12.97791,77.43037
+Channenahalli,21484,12.97786,77.43052
+Channenahalli Arch,21485,12.97987,77.43545
+Channenahalli Arch,21486,12.97977,77.43546
+Chapparadakallu,24445,13.27935,77.62543
+Chapparadakallu,31940,13.27913,77.62541
+Chapradakallu,29830,13.27924,77.62536
+Charls School Toll Gate,21826,13.00616,77.62084
+Charls School Toll Gate,21827,13.00616,77.62099
+Chatra (Yeliyuru Gate),38396,13.27744,77.75845
+Chatra (Yeliyuru Gate),38397,13.27743,77.75846
+Cheemachanahalli,21828,13.21823,77.7861
+Cheemachanahalli,21829,13.21772,77.78583
+Cheemandahalli,24449,13.05051,77.81179
+Cheemandahalli,32244,13.05063,77.81171
+Cheemandahalli Cross,24451,13.0449,77.81346
+Cheemandahalli Cross,32245,13.0449,77.81356
+Cheemasandra,24454,13.21347,77.86867
+Cheemasandra,32246,13.04772,77.73938
+Cheemasandra,32247,13.21365,77.86867
+Cheemasandra Gate,21830,13.03878,77.74042
+Cheemasandra Gate,24455,13.03903,77.74008
+Chelekere Circle,24459,13.03074,77.64375
+Chelekere Circle,32249,13.0307,77.64396
+Cheluvayyanapalya,24462,12.99213,77.26465
+Cheluvayyanapalya,32250,12.99222,77.26465
+Chennathimmana Gollahalli Gate,24466,13.14109,77.89828
+Chennathimmana Gollahalli Gate,32252,13.14104,77.89838
+Chenuvalli,24468,13.19909,77.34717
+Chenuvalli,32253,13.19911,77.34711
+Chikka Adugodi,23958,12.92899,77.60943
+Chikka Adugodi,23963,12.92894,77.60939
+Chikka Arasanahalli,24470,12.7335,77.38128
+Chikka Arasanahalli,32254,12.73344,77.38125
+Chikka Banavara,20717,13.08053,77.50259
+Chikka Banavara,20718,13.08053,77.50255
+Chikka Banavara,38531,13.08057,77.5026
+Chikka Basti,24480,12.94466,77.47504
+Chikka Basti,32260,12.94453,77.4751
+Chikka Basti Masjid,24481,12.94178,77.47403
+Chikka Basti Masjid,28880,12.94191,77.47411
+Chikka Beguru,32261,12.87873,77.63767
+Chikka Beguru,32262,12.87874,77.63776
+Chikka Belavagala Gate,24486,13.19833,77.42683
+Chikka Belavagala Gate,32263,13.19828,77.4269
+Chikka Bellanduru,24488,12.91219,77.71442
+Chikka Bellanduru,32264,12.91227,77.71435
+Chikka Bettahalli,21832,13.08945,77.55629
+Chikka Bettahalli,21833,13.08949,77.55624
+Chikka Bommasandra Cross,21834,13.09352,77.58241
+Chikka Bommasandra Cross,21835,13.09356,77.58241
+Chikka Byalakere,24491,13.11965,77.52161
+Chikka Byalakere,32265,13.11963,77.52156
+Chikka Dasarahalli,24493,12.89159,77.78471
+Chikka Dasarahalli,32266,12.89201,77.78445
+Chikka Dasarahalli Cross,24495,12.88192,77.78783
+Chikka Dasarahalli Cross,32267,12.88197,77.78777
+Chikka Devasandra KR Puram,24257,13.00442,77.70583
+Chikka Devasandra KR Puram,24260,13.00423,77.70605
+Chikka Dunnasandra,24496,12.86297,77.76192
+Chikka Gollarahatti,21487,12.99147,77.46559
+Chikka Gollarahatti,21488,12.99142,77.4656
+Chikka Gubbi,24499,13.08048,77.6663
+Chikka Gubbi,32269,13.0805,77.66627
+Chikka Gubbi Cross,21836,13.08425,77.65417
+Chikka Gubbi Cross,21837,13.08442,77.65434
+Chikka Hagade Gate,23842,12.73157,77.70647
+Chikka Hagade Gate,23977,12.73141,77.70639
+Chikka Haralagere,24503,13.20046,77.82497
+Chikka Haralagere,32271,13.20059,77.825
+Chikka Hosahalli,24507,12.70587,77.64521
+Chikka Indluwadi,24509,12.71634,77.64069
+Chikka Indluwadi,32274,12.71624,77.64062
+Chikka Kammanahalli,24511,12.84966,77.59993
+Chikka Kammanahalli,32275,12.84969,77.59996
+Chikka Kodigehalli,24513,12.97198,77.46505
+Chikka Kodigehalli,32276,12.97204,77.46491
+Chikka Korati,24517,13.19479,77.95712
+Chikka Kukkanahalli,20719,13.15745,77.44891
+Chikka Kukkanahalli,24518,13.15753,77.44899
+Chikka Kuntanahalli,24520,12.79348,77.4384
+Chikka Kuntanahalli,32279,12.79354,77.43842
+Chikka Kuntanahalli Cross,24522,12.79221,77.43864
+Chikka Kuntanahalli Cross,32280,12.79216,77.43871
+Chikka Madhure,20720,13.20647,77.4398
+Chikka Madhure,24523,13.2065,77.43977
+Chikka Mariyappanapalya,24525,12.93991,77.40042
+Chikka Mariyappanapalya,32281,12.94006,77.40037
+Chikka Maskal,24526,12.91971,77.33055
+Chikka Nagamangala,24528,12.85997,77.69504
+Chikka Nagamangala,32282,12.86,77.69495
+Chikka Nagamangala Gate,24530,12.85921,77.7036
+Chikka Nagamangala Gate,32283,12.85921,77.70367
+Chikka Nallala,32284,13.09694,77.89533
+Chikka Nekkundi,24533,12.92985,77.76583
+Chikka Nekkundi,35329,12.92992,77.76569
+Chikka Puttaiahnapalya,24535,13.09719,77.31911
+Chikka Puttaiahnapalya,32285,13.09713,77.3191
+Chikka Sanne Gate,24537,13.23031,77.69109
+Chikka Sanne Gate,32286,13.23038,77.69093
+Chikka Tanda Manchenahalli Cross,24539,13.03776,77.35001
+Chikka Tanda Manchenahalli Cross,32287,13.03781,77.35004
+Chikka Tattamangala Gate,25595,13.28015,77.76282
+Chikka Tattamangala Gate,32781,13.28017,77.76282
+Chikka Thataguni,24543,12.84552,77.51418
+Chikka Thataguni,32289,12.84542,77.51416
+Chikka Thirupathi,24549,12.89536,77.86697
+Chikka Thirupathi,32292,12.89538,77.86704
+Chikka Thirupathi,35366,12.89532,77.867
+Chikka Thogurupalya,24553,12.9562,77.28287
+Chikka Thogurupalya,32294,12.95628,77.28314
+Chikka Tumkur Cross,24557,13.25273,77.53883
+Chikka Tumkur Cross,32296,13.25266,77.53886
+Chikka Tumkur Lake,24559,13.27726,77.51912
+Chikka Tumkur Lake,32297,13.27744,77.51903
+Chikka Veeraiahanapalya Cross,24561,13.11427,77.43148
+Chikka Veeraiahanapalya Cross,32298,13.11416,77.4316
+Chikka Veeraiahnapalya,24563,12.94541,77.40052
+Chikka Veeraiahnapalya,32299,12.94527,77.40047
+Chikkaballapura,37648,13.43768,77.73199
+Chikkabanavara Railway Station,21108,13.07562,77.50465
+Chikkabanavara Railway Station,21109,13.07523,77.50453
+Chikkabidarakallu,21838,13.05235,77.48774
+Chikkabidarakallu,24566,13.05196,77.48778
+Chikkagattiganabbe,24568,13.04166,77.79549
+Chikkagattiganabbe,32301,13.0416,77.79554
+Chikkahosahalli Gate,24570,13.2073,77.76298
+Chikkahosahalli Gate,32302,13.20727,77.76302
+Chikkahullur,24572,13.1051,77.82485
+Chikkahullur,32303,13.10508,77.82493
+Chikkajala,24574,13.17277,77.63318
+Chikkajala,32304,13.17273,77.63369
+Chikkallasandra,24575,12.91507,77.55198
+Chikkallasandra Aralimara,21840,12.91168,77.55226
+Chikkallasandra Aralimara,21841,12.91165,77.55235
+Chikkallasandra Aralimara,24576,12.91184,77.55215
+Chikkallasandra Bank Colony,21842,12.90906,77.5491
+Chikkallasandra Bank Colony,21843,12.90914,77.54927
+Chikkamaranahalli,24580,13.25705,77.7637
+Chikkamaranahalli,32305,13.25705,77.76374
+Chikkamaranahalli,32306,13.09053,77.32314
+Chikkamaranahalli,32307,13.09039,77.32311
+Chikkamaranahalli Colony,24582,13.0967,77.32268
+Chikkamaranahalli Colony,32308,13.09665,77.32266
+Chikkammanapalya,24584,12.95033,77.423
+Chikkammanapalya,32309,12.95049,77.42292
+Chikkana Hosahalli,24586,13.21479,77.58064
+Chikkana Hosahalli,32310,13.21474,77.58065
+Chikkanahalli,24599,13.13174,77.90309
+Chikkanahalli,32311,13.18385,77.6882
+Chikkanahalli,32312,13.18367,77.38426
+Chikkanahalli,32313,12.71757,77.64672
+Chikkanahalli,32314,12.71755,77.64681
+Chikkanahalli,32315,12.93444,77.47249
+Chikkanahalli,32316,12.8816,77.35521
+Chikkanahalli,32317,13.13171,77.90315
+Chikkanahalli,32318,12.93457,77.47251
+Chikkanahalli,32319,12.88186,77.35537
+Chikkanahalli,32320,13.18394,77.68817
+Chikkanahalli (Railway Gollahalli),24588,13.18371,77.38434
+Chikkanahalli Bande,24601,13.17933,77.39042
+Chikkanahalli Bande,32321,13.17931,77.39034
+Chikkanahalli Gate,24605,13.12584,77.90411
+Chikkanahalli Gate,32323,13.12559,77.90421
+Chikkanahalli School,28191,13.18267,77.3866
+Chikkanahalli School,34485,13.18269,77.3865
+Chikkanayakanahalli,24607,12.89231,77.69445
+Chikkanayakanahalli,32324,12.89224,77.69443
+Chikkanayakanahalli Dinne,24609,12.88392,77.69698
+Chikkanayakanahalli Dinne,32325,12.88383,77.69706
+Chikkegowdanapalya,24613,12.87872,77.51476
+Chikkegowdanapalya,32327,12.87877,77.51467
+Chikkellur Cross,24615,12.89191,77.42158
+Chikkellur Cross,32328,12.89183,77.42171
+Chinmaya Vidyalaya Koramangala,24618,12.93491,77.62811
+Chinnaiahnapalya,24621,12.72257,77.65589
+Chinnakurchi,24623,12.82745,77.45962
+Chinnakurchi,32331,12.82741,77.45962
+Chinnappa Garden,32332,13.00302,77.60354
+Chinnappa Garden,32333,13.0031,77.60353
+Chinnappa Layout,24630,13.02822,77.60958
+Chinnappa Layout,32335,13.02823,77.60961
+Chinnaswamy Stadium,22694,12.97742,77.59885
+Chinnayyanapalya Silk Farm,21844,12.85347,77.52329
+Chinnayyanapalya Silk Farm,21845,12.85375,77.52338
+Chinnayyanapalya Silk Farm,37208,12.85368,77.52303
+Chinthala Madivala,24637,12.85269,77.71173
+Chinthala Madivala,32338,12.85266,77.71179
+Chinthala Madivala Cross,24639,12.85459,77.71233
+Chinthala Madivala Cross,32339,12.85454,77.71223
+Chitrakala parishath new Campus Srinivasapura,24641,12.90329,77.50754
+Chokkahalli Gate,24646,13.11222,77.83227
+Chokkahalli Gate,32341,13.11222,77.83213
+Chokkanahali Government School,28791,13.11131,77.69131
+Chokkanahali Government School,33826,13.11135,77.69137
+Chokkanahalli,24652,13.08235,77.62499
+Chokkanahalli,32342,13.18312,77.53915
+Chokkanahalli,32343,13.11358,77.68754
+Chokkanahalli,32344,13.11348,77.68762
+Chokkanahalli,32345,13.08233,77.62499
+Chokkanahalli,32346,13.18306,77.53932
+Chokkanahalli Gate,21846,13.08466,77.63487
+Chokkanahalli Gate,21847,13.08471,77.63473
+Chokkasandra,32347,12.87059,77.7211
+Chokkasandra,32348,12.87066,77.7212
+Chokkasandra Cross,24658,12.87348,77.73397
+Chokkasandra Cross,32349,12.87355,77.73402
+Chokkasandra Cross,32350,12.87348,77.73409
+Chokkasandra Gate,24660,13.1832,77.88681
+Chokkasandra Gate,32351,13.18333,77.8867
+Cholanayakanahalli,21489,12.96021,77.35949
+Cholanayakanahalli,21490,12.96049,77.35958
+Cholappanahalli Gate,24664,13.11897,77.83919
+Cholappanahalli Gate,32353,13.1191,77.83923
+Choodasandra,24666,12.88928,77.68135
+Choodasandra Circle,24667,12.88853,77.67299
+Choodasandra Circle,35370,12.88855,77.67294
+Choudappa Layout,24669,13.10983,77.5281
+Choudappa Layout,32355,13.10978,77.52807
+Chowdanahalli,24671,13.21432,77.62861
+Chowdanahalli,32356,13.21425,77.62856
+Chowdappanahalli,21848,13.14844,77.75364
+Chowdappanahalli,21849,13.14869,77.75372
+Chowdareddy Circle,23971,12.71119,77.69949
+Chowdareddy Circle,23973,12.71125,77.69931
+Chowdary Line,38858,13.00521,77.63878
+Chowdeshwari Nagara Thataguni,24674,12.84993,77.51893
+Chowdeshwari Temple,24678,12.99483,77.56638
+Chowdeshwari Temple,32358,12.75911,77.69019
+Chowdeshwari Temple,32359,12.75914,77.69013
+Chowdeshwari Temple B Channasandra,24679,13.01094,77.65918
+Chowdeshwarinagara,24682,12.99759,77.39939
+Chowdeshwarinagara,32362,12.9975,77.39944
+Chowdeshwarinagara,36390,13.00054,77.52472
+Chowdeshwarinagara,36391,13.0006,77.525
+Chowdeshwarinagara JP Park,24270,13.03272,77.55408
+Chowdeshwarinagara JP Park,24683,13.03281,77.55446
+Chowdeshwarinagara JP Park,37606,13.03284,77.55432
+Chowdeshwarinagara Thataguni,24684,12.84985,77.5188
+Christ International School Cross,24686,12.88589,77.89044
+Christ International School Cross,32363,12.88587,77.89049
+Christ School,24688,12.79915,77.51192
+Christ School,32364,12.79918,77.51189
+Christal House Learning School,24690,13.0943,77.65168
+Christal House Learning School,32365,13.09439,77.65173
+Chudahalli,24692,12.78228,77.48943
+Chudahalli,32366,12.78225,77.48943
+Chunchaghatta,24694,12.88558,77.57487
+Chunchaghatta,32367,12.88553,77.57489
+Chunchanakuppe,24696,12.91041,77.3863
+Chunchanakuppe,32368,12.91035,77.38608
+Cipla Avalahalli,21850,13.03243,77.73148
+Cipla Avalahalli,21851,13.03263,77.73114
+Cipla Avalahalli,38192,13.03229,77.73139
+City Civil Court,24128,12.97343,77.58243
+City Civil Court (CHAKRA),37720,12.97339,77.58237
+City Engineering College Vasantha Vallabha Nagara,24700,12.8875,77.55042
+City Engineering College Vasantha Vallabha Nagara,32369,12.88746,77.55039
+Clarence School,35922,13.00309,77.61666
+Cloride Metal,36224,12.93964,77.91132
+Cloride Metal,36225,12.93954,77.91152
+Coca Cola Byramangala,24711,12.78086,77.40412
+Coca Cola Byramangala,32374,12.78103,77.40411
+Coffee Board Layout,24715,13.04843,77.60914
+Coffee Board Layout,32377,13.04853,77.60919
+Coffee Day Hope Farm,38049,12.97998,77.75162
+Coffee Day Hope Farm,38050,12.97987,77.75168
+Cohera,38695,13.17322,77.74122
+Coles Park,21857,12.99534,77.60829
+Coles Park,21859,12.99573,77.60668
+Coles Park,24717,12.99308,77.60928
+Coles Park,32378,12.99301,77.60927
+Coles Road,21862,12.99661,77.61204
+Coles Road,21863,12.99632,77.61247
+College Cross Byadarahalli,21492,12.98569,77.47952
+College Cross Byadarahalli,21493,12.98552,77.47964
+Commando Hospital,21864,12.96364,77.62641
+Commando Hospital,21865,12.96271,77.62756
+Commercial Street,24721,12.98283,77.60623
+Commercial Street,32380,12.97985,77.60968
+Commercial Street,35086,12.97994,77.60981
+Commercial Street,35212,12.98163,77.60822
+Concord Apartment Electronic City,24722,12.84056,77.65185
+Concord Apartment Electronic City,35337,12.84061,77.65172
+Corporation,20725,12.96839,77.58675
+Corporation,20726,12.96815,77.5893
+Corporation,20727,12.96701,77.58822
+Corporation,20728,12.9648,77.58778
+Country Club Bagaluru,24724,13.12348,77.63937
+Country Club Bagaluru,32381,13.12356,77.63933
+Cox Town,23660,12.99648,77.62157
+Cox Town,24047,12.99629,77.62153
+Cross Kenganahalli,24732,13.04047,77.42686
+Cross Kenganahalli,32383,13.04045,77.42692
+Crown Plaza,20732,12.851,77.66032
+Crown Plaza,24733,12.85092,77.66
+Crystal Apartment Sarjapura Road,21866,12.86759,77.76725
+Crystal Apartment Sarjapura Road,21867,12.8677,77.76709
+Cubbon Park Metro Station,24741,12.98083,77.59722
+Cubbon Park Metro Station,37694,12.98068,77.59835
+Cubbon Park Metro Station,38459,12.98068,77.59831
+Cubbon Park Metro Station,38584,12.9812,77.59722
+Cunningham Road,21869,12.98787,77.59427
+C‌ Q A L,23341,13.01178,77.59326
+D Cross Doddaballapura,24749,13.30659,77.54594
+D Cross Doddaballapura,32387,13.30655,77.54577
+D Cross Doddaballapura,32389,13.3066,77.54574
+D Group Employees Layout,24751,13.09134,77.69091
+D Group Employees Layout,32390,13.09127,77.69089
+D Group Employees Layout Srigandhada Kaval,26638,12.97808,77.49874
+D Group Employees Layout Srigandhada Kaval,34680,12.97813,77.49874
+D Hosahalli,24753,12.96839,77.83253
+D Hosahalli,32391,12.96831,77.83242
+D Shettihalli Gate,24755,13.15048,77.86833
+D Shettihalli Gate,32392,13.15056,77.86845
+D Souza Circle,21872,12.96755,77.61106
+D Souza Nagara,24758,12.93179,77.53331
+D Souza Nagara,32393,12.93199,77.53289
+DEPOT-19 Gate,38109,12.84691,77.67192
+DHFL,37969,13.19963,77.69561
+DHFL,38070,13.19945,77.69561
+DLF Home Town,25000,12.87565,77.61775
+DLF Home Town,32493,12.8758,77.61776
+DRDO 2nd Stage,32570,12.98575,77.67928
+DRDO Quarters,21925,12.98546,77.66133
+DRDO Quarters,21926,12.98551,77.66147
+DSC HAL GM Palya,38105,12.97659,77.66824
+DUO Heights Layout,25164,12.89486,77.61468
+DUO Heights Layout,32572,12.89486,77.61463
+Daadinayakana Doddy,24759,12.83955,77.94408
+Dabaspete,24761,13.22778,77.2418
+Dabaspete,32394,13.2277,77.24144
+Dabbaguli,24763,12.89092,77.32275
+Dabbaguli Gate,24765,12.87,77.32808
+Dabbaguli Gate,32396,12.87007,77.32804
+Dalai Lama College,20733,12.85049,77.42456
+Dalai Lama College,20734,12.85056,77.42409
+Dalmia Circle,24769,12.90639,77.59505
+Dalmia Circle,35201,12.90618,77.59504
+Dalmia Circle,35959,12.90697,77.595
+Damodhar Nagara,24771,12.9536,77.79708
+Dandiganahalli,32400,13.30955,77.76757
+Dandupalya,24775,13.07455,77.81156
+Dandupalya,32401,13.07461,77.81115
+Dandupalya Cross,24777,13.07636,77.81145
+Dandupalya Cross,32402,13.07638,77.81149
+Dandupalya Gate,32403,13.07728,77.80786
+Dandupalya Gate,32404,13.07689,77.80804
+Dargha,24784,13.28742,77.77445
+Dargha,32406,13.28746,77.77446
+Darshan Farm,24785,12.9313,77.52682
+Dasanapura,21873,13.07542,77.43636
+Dasanapura,24788,13.07523,77.43599
+Dasanapura,32407,12.74761,77.77447
+Dasanayakanahalli,24050,13.11829,77.6884
+Dasanayakanahalli,24303,13.11823,77.68833
+Dasappanapalya,24792,13.07933,77.50587
+Dasappanapalya,32409,13.07935,77.50591
+Dasarahalli,24796,13.09995,77.83616
+Dasarahalli,32412,13.09998,77.83611
+Dasarahalli Hebbala,24799,13.05633,77.61159
+Dasarahalli Hebbala,32413,13.05631,77.61148
+Dasarahalli Hebbala,32414,13.05627,77.61157
+Dasarahalli Kere,21496,12.98595,77.54179
+Dasarahalli Kere,24067,12.98517,77.54417
+Dasarahalli Road Junction,30369,13.05573,77.59451
+Dasarahalli Road Junction,33143,13.05583,77.5941
+Dasegowdarapalya,24805,13.02341,77.39444
+Dasegowdarapalya,32417,13.02347,77.39426
+Dasenahalli Cross,20735,13.14087,77.46523
+Dasenahalli Cross,24808,13.14091,77.46519
+Dattatreya Peeta Doddagubbi,24812,13.06732,77.66465
+Dattatreya Peeta Doddagubbi,32420,13.06739,77.66465
+Dattatreya Temple Malleshwara,20736,12.99893,77.57479
+Dattatreya Temple Malleshwara,20737,12.99895,77.57462
+Dayananda Sagar College,21874,12.90948,77.56553
+Dayananda Sagar College,21875,12.90949,77.5654
+Dayananda Sagar Vidya Samste,23601,12.82498,77.51373
+Dayananda Sagar Vidya Samste,23637,12.82479,77.51377
+Deccan,24161,12.90247,77.62741
+Deccan,24165,12.90255,77.62745
+Deepa Complex,24817,12.96659,77.50483
+Deepa Complex,35400,12.96698,77.50519
+Deepa Complex,35406,12.96636,77.50508
+Deepak Factory,21877,13.04749,77.50135
+Deepak Factory,24818,13.04704,77.50159
+Deepak Nursing Home,21878,12.92598,77.57711
+Deepak Nursing Home,21879,12.92518,77.57699
+Deepanjalinagara,20738,12.95375,77.53624
+Deepanjalinagara,20739,12.9514,77.53724
+Deganahalli,24820,13.13448,77.37353
+Deganahalli,32423,13.13446,77.3735
+Dell,24821,12.95275,77.64044
+Dell Domluru,21881,12.95291,77.64065
+Depot-06 Gate,20741,12.98262,77.63503
+Depot-06 Gate,20742,12.98246,77.63463
+Depot-10 Gate,21498,13.02766,77.63242
+Depot-10 Gate,35918,13.0255,77.63049
+Depot-10 Gate,35919,13.02542,77.63059
+Depot-12 Gate,35721,12.90471,77.47084
+Depot-12 Gate,36407,12.90481,77.47068
+Depot-12 Kengeri,24833,12.90424,77.4727
+Depot-14 Gate,36584,13.02844,77.5937
+Depot-14 RT Nagara,35045,13.02868,77.59328
+Depot-20 Banashankari,21503,12.91871,77.57086
+Depot-24 Gate,21886,13.00341,77.6825
+Depot-24 Gate,36727,13.00331,77.6825
+Depot-24 ITI Layout,24843,13.00163,77.68359
+Depot-25 Gate,20749,12.91936,77.64255
+Depot-25 Gate,32427,12.91956,77.64495
+Depot-25 Gate (Central Silk Board),20748,12.91952,77.64294
+Depot-27 Gate,36342,12.7801,77.63448
+Depot-27 Gate,36343,12.78003,77.63445
+Depot-29 KR Puram,24851,13.00444,77.69175
+Depot-30 Puttenahalli,24852,13.11009,77.57762
+Depot-31 Gate,21887,12.99306,77.52146
+Depot-31 Gate,35917,12.99311,77.5213
+Depot-31 Summanahalli,24854,12.99285,77.52221
+Depot-32 Suryacity,24855,12.79047,77.70677
+Depot-33 Poornapragna layout,35283,12.90974,77.53606
+Depot-34 Gate,32430,12.87023,77.58567
+Depot-34 Gate,35964,12.87021,77.58571
+Depot-35 Gate,35809,12.9726,77.44268
+Depot-36 Bidadi,24861,12.76888,77.41428
+Depot-36 Gate,24863,12.7684,77.41397
+Depot-36 Gate,32432,12.76845,77.41403
+Depot-38 Chikkanagamangala,24864,12.85019,77.69176
+Depot-38 Gate,24866,12.84901,77.69247
+Depot-38 Gate,36785,12.84902,77.69251
+Depot-39 Gate,36725,13.06905,77.78178
+Depot-39 Hoskote,32434,13.06832,77.78173
+Depot-40 Dasanapura,32435,13.07402,77.44491
+Depot-40 Gate,22973,13.06872,77.44766
+Depot-41 Gate,37149,12.9213,77.74239
+Depot-41 Gate,37151,12.92131,77.74234
+Depot-42 Gate  Arrival,23510,12.89538,77.70565
+Depot-42 Gate Departure,23509,12.89553,77.7057
+Depot-43 Gate,32436,13.06565,77.4255
+Depot-45 Gate,35044,13.08298,77.55066
+Depot-45 Gate,36327,13.0829,77.55072
+Depot-46 Gate,32438,13.18748,77.5634
+Depot-47 Gate,36726,13.08467,77.73201
+Depot-47 Manduru,35708,13.08535,77.73146
+Depot-48 Byrathibande,24888,13.07668,77.65422
+Depot-48 Gate,35041,13.07752,77.65472
+Depot-48 Gate,35042,13.07756,77.65467
+Depot-51 Sadaramangala Arrival,37590,12.99596,77.72624
+Depot-51 Sadaramangala Departure,37589,12.99606,77.72622
+Depot-9,38085,13.02036,77.50051
+Deshnarayanaswamy Temple,21888,13.13719,77.74576
+Deshnarayanaswamy Temple,24892,13.13726,77.74569
+Design Global Mavallipura,24894,13.1313,77.53093
+Design Global Mavallipura,32439,13.13126,77.53097
+Deva Machohalli Cross,21504,12.96552,77.3811
+Deva Machohalli Cross,21505,12.96536,77.38112
+Devadiga Soudha,24896,12.92658,77.52002
+Devadiga Soudha,32440,12.9265,77.51998
+Devaganahalli,248
